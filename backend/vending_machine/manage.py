@@ -4,9 +4,14 @@ import os
 import sys
 
 
+DEV_STATE = 'development'
+PRODUCTION_STATE = 'production'
+
 def main():
+    state = os.environ.get('STATE', DEV_STATE)
+
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'vending_machine.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', f'vending_machine.settings.{state}')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
