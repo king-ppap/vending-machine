@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+    vending-machine-db:
+        image: postgres:14-alpine
+        volumes:
+            - ./data/postgresql:/var/lib/postgresql/data
+        restart: always
+        ports:
+            - '9432:5432'
+        env_file:
+            - .env-dev
+
+    vending-machine-web:
+        build: ./vending-machine
+        command: sh /vending-machine/runserver.sh
+        volumes:
+            - ./vending-machine:/vending-machine
+            - ./vending-machine/static/:/var/www/vending-machine/static/
+            - ./vending-machine/media/:/var/www/vending-machine/media/
+        depends_on:
+            - vending-machine-db
+        env_file:
+            - .env-dev
+        restart: always
+
+    vending-machine-gateway:
+        container_name: vending-machine-gateway
+        image: nginx:alpine
+        ports:
+            - '8989:80'
+        volumes:
+            - ./nginx-dev/:/etc/nginx/conf.d
+            - ./vending-machine:/vending-machine
+            - ./vending-machine/static/:/var/www/vending-machine/static/
+            - ./vending-machine/media/:/var/www/vending-machine/media/
+            - ./certs/:/certs
+        depends_on:
+            - vending-machine-web
+        restart: always
