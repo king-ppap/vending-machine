@@ -5,13 +5,13 @@ from .models import VendingMachine
 @admin.register(VendingMachine)
 class VendingMachineAdmin(admin.ModelAdmin):
     readonly_fields = [
-        'code'
+        'uuid'
     ]
     list_display = [
-        'code',
+        'uuid',
         'name',
     ]
     search_fields = [
-        'code',
+        'uuid',
         'name',
     ]

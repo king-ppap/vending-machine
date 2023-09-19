@@ -34,6 +34,5 @@ class ItemsInMachineWithUuidList(GenericViewSet):
 
     @action(methods=['get'], detail=False, url_path='(?P<uuid>[^/.]+)')
     def get_items_in_machine_with_uuid(self, request, uuid):
-        items = ItemsInMachine.objects.filter(machine__code=uuid)
-        items = ItemsInMachineSerializer(items, many=True).data
-        return Response(items)
+        items = ItemsInMachine.objects.filter(machine__uuid=uuid)
+        return Response(ItemsInMachineSerializer(items, many=True).data)
