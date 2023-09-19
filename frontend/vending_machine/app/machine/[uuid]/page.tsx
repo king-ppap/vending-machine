@@ -1,3 +1,3 @@
 export default function Page({ params }: { params: { uuid: string } }) {
-    return <div>My Post: {params.uuid}</div>;
+    return <div>Machine ID: {params.uuid}</div>;
 }
