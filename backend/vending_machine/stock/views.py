@@ -1,7 +1,9 @@
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
+from drf_spectacular.types import OpenApiTypes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet, ModelViewSet
 from .models import Product, Category, ItemsInMachine
-from .serializers import ProductSerializer, CategorySerializer, ItemsInMachineSerializer
+from .serializers import ProductSerializer, CategorySerializer, ItemsInMachineSerializer, BuyItemRequestSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
@@ -9,6 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 import logging
 logger = logging.getLogger(__name__)
+
 
 class ProductViewSet(ModelViewSet):
     permission_classes = [AllowAny]
@@ -36,3 +39,11 @@ class ItemsInMachineGenericViewSet(GenericViewSet):
     def get_items_in_machine_with_uuid(self, request, uuid):
         items = ItemsInMachine.objects.filter(machine__uuid=uuid)
         return Response(ItemsInMachineSerializer(items, many=True).data)
+
+    @extend_schema(
+        request=BuyItemRequestSerializer,
+    )
+    @action(methods=['post'], detail=False, url_path='(?P<uuid>[^/.]+)/buy/(?P<code>[^/.]+)')
+    def buy_item(self, request, uuid, code):
+
+        return Response([request.data, uuid, code])

@@ -20,3 +20,14 @@ class ItemsInMachineSerializer(serializers.ModelSerializer):
     class Meta:
         model = ItemsInMachine
         fields = '__all__'
+
+
+class BuyItemRequestSerializer(serializers.Serializer):
+    coin_1 = serializers.IntegerField()
+    coin_5 = serializers.IntegerField()
+    coin_10 = serializers.IntegerField()
+    banknotes_20 = serializers.IntegerField()
+    banknotes_50 = serializers.IntegerField()
+    banknotes_100 = serializers.IntegerField()
+    banknotes_500 = serializers.IntegerField()
+    banknotes_1000 = serializers.IntegerField()
