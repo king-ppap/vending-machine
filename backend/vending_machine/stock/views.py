@@ -28,7 +28,7 @@ class ItemsInMachineViewSet(ModelViewSet):
     serializer_class = ItemsInMachineSerializer
 
 
-class ItemsInMachineWithUuidList(GenericViewSet):
+class ItemsInMachineGenericViewSet(GenericViewSet):
     serializer_class = ItemsInMachineSerializer(many=True)
     queryset = ItemsInMachine.objects.all()
 
