@@ -42,9 +42,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     # 'cid.apps.CidAppConfig',
-    'survey',
-    'app',
-    'utils_api',
+    'machine',
+    'stock',
 ]
 
 MIDDLEWARE = [
