@@ -1,6 +1,5 @@
 from django.db import models
 import uuid
-from stock.models import Product
 
 
 class VendingMachine(models.Model):
@@ -21,8 +20,3 @@ class VendingMachine(models.Model):
     def __str__(self):
         return self.name
 
-
-class ItemsInMachine(models.Model):
-    machine = models.ForeignKey(VendingMachine, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.PROTECT)
-    count = models.SmallIntegerField(default=0)

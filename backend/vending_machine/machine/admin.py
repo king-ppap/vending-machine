@@ -1,19 +1,17 @@
 from django.contrib import admin
-from .models import VendingMachine, ItemsInMachine
+from .models import VendingMachine
 
 
 @admin.register(VendingMachine)
 class VendingMachineAdmin(admin.ModelAdmin):
-    search_fields = [
-        'code', 'name',
-    ]
-
-
-@admin.register(ItemsInMachine)
-class ItemsInMachineAdmin(admin.ModelAdmin):
-    search_fields = [
-        'machine', 'product',
+    readonly_fields = [
+        'code'
     ]
     list_display = [
-        'machine', 'product', 'count',
+        'code',
+        'name',
+    ]
+    search_fields = [
+        'code',
+        'name',
     ]
