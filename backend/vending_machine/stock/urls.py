@@ -9,8 +9,7 @@ router = DefaultRouter()
 router.register('product', ProductViewSet, basename='Stock')
 router.register('category', CategoryViewSet, basename='Stock')
 router.register('items', ItemsInMachineViewSet, basename='Stock')
-router.register(
-    'stock', ItemsInMachineGenericViewSet, basename='Stock')
+router.register('stock', ItemsInMachineGenericViewSet, basename='Stock')
 
 urlpatterns = [
     re_path('', include(router.urls)),
