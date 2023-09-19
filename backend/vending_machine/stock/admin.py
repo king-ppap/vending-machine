@@ -19,8 +19,9 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(ItemsInMachine)
 class ItemsInMachineAdmin(admin.ModelAdmin):
     search_fields = [
-        'machine', 'product',
+        'machine__code', 'machine__name', 'product__code', 'product__name',
     ]
     list_display = [
         'machine', 'product', 'count',
     ]
+    list_filter = ['machine__name']

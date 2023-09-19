@@ -148,17 +148,6 @@ SPECTACULAR_SETTINGS = {
     # OTHER SETTINGS
 }
 
-SWAGGER_SETTINGS = {
-    'SECURITY_DEFINITIONS': {
-        'TOKEN': {
-            'type': 'apiKey',
-            'in': 'header',
-            'name': 'Authorization',
-            'description': 'Token format "Token <your-app-token>"',
-        },
-    },
-}
-
 ADMINS = [('Nut', 'nuthathaina@gmail.com')]
 LOGGING = {
     'version': 1,
