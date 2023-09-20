@@ -7,6 +7,12 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = [
         'code', 'name',
     ]
+    list_display = [
+        'name', 'price', 'category'
+    ]
+    list_filter = [
+        'category__name'
+    ]
 
 
 @admin.register(Category)
@@ -24,4 +30,4 @@ class ItemsInMachineAdmin(admin.ModelAdmin):
     list_display = [
         'machine', 'product', 'count',
     ]
-    list_filter = ['machine__name']
+    list_filter = ['machine__name', 'product__category__name']
