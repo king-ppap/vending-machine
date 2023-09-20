@@ -19,7 +19,7 @@ export default function Page({ params }: { params: { uuid: string } }) {
             <div>
                 {isShowDebug ? (
                     <div className="w-full flex bg-slate-300">
-                        <p className="mr-2">Debug: {`${isShowDebug}`}</p>
+                        <p className="mr-2">Debug:</p>
                         <Switch
                             onChange={onChangeDebug}
                             defaultChecked

@@ -1,11 +1,11 @@
 import useSWR from 'swr';
 import { fetcher } from ".";
-import { StockResponse } from '@/type/api/vending-machine/stock';
+import { IGetVendingMachineListResponse } from '@/type/api/vending-machine';
 
-export const useStock = (uuid: string) => {
-    const url = `/stock/${uuid}/`;
+export const useApiVendingMachineList = () => {
+    const url = '/vending-machine/';
     const { data, isLoading, error }: {
-        data: StockResponse;
+        data: IGetVendingMachineListResponse;
         isLoading: boolean;
         error: any;
     } = useSWR(url, (url) => fetcher(url));

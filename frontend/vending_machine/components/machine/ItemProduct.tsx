@@ -7,10 +7,10 @@ interface Props {
 
 export default function ItemProduct(props: Props) {
     return (
-        <div className="flex flex-col ">
-            <img src={props.item.product.image} alt={props.item.product.name} />
+        <div className="flex flex-col justify-center items-center">
+            <img className='w-[100px] h-[100px]' src={props.item.product.image} alt={props.item.product.name} />
             <p>{props.item.product.name}</p>
-            <Button>Add</Button>
+            <Button>Buy</Button>
         </div>
     );
 }
