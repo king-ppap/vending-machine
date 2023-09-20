@@ -1,8 +1,11 @@
 'use client';
 import useSWR from 'swr';
 import { List, Typography } from 'antd';
-import { IGetVendingMachineListResponse, IVendingMachine } from '@/type/api/vending-machine';
-import { Spin } from 'antd';
+import {
+    IGetVendingMachineListResponse,
+    IVendingMachine,
+} from '@/type/api/vending-machine';
+import AppLoadingFullScreen from '@/components/app/AppLoadingFullScreen';
 
 // import getConfig from 'next/config'
 // const { publicRuntimeConfig } = getConfig();
@@ -25,7 +28,7 @@ export default function Home() {
     }
 
     return isLoading ? (
-        <Spin size="large" />
+        <AppLoadingFullScreen />
     ) : (
         <List
             header={<div>Machine List</div>}
@@ -33,7 +36,8 @@ export default function Home() {
             dataSource={data.results}
             renderItem={(item: IVendingMachine) => (
                 <List.Item>
-                    <Typography.Text mark>[{item.uuid}]</Typography.Text> {item.name}
+                    <Typography.Text mark>[{item.uuid}]</Typography.Text>{' '}
+                    {item.name}
                 </List.Item>
             )}
             className="bg-white"
