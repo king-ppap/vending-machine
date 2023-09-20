@@ -1,9 +1,10 @@
-import { Banknote, Coin } from '@/type/api/vending-machine';
+import { Banknote, Coin } from '@/type/api/vending-machine/get-vm-list';
 import ItemProduct from './ItemProduct';
 import { useStock } from '@/api/stock';
-import { StockResponse } from '@/type/api/vending-machine/stock';
+import { StockResponse } from '@/type/api/stock/stock';
 import AppLoadingFullScreen from '../app/AppLoadingFullScreen';
 import { Alert } from 'antd';
+import { useApiVendingMachineDetail } from '@/api/vending-machine';
 
 interface Props {
     uuid: string;
@@ -12,29 +13,43 @@ interface Props {
 }
 
 export default function Machine(props: Props) {
-    const { data, isLoading, error } = useStock(props.uuid);
+    const vmDetail = useApiVendingMachineDetail(props.uuid);
+    const stock = useStock(props.uuid);
 
-    if (error)
+    if (vmDetail.error || stock.error)
         return (
-            <div className='w-full flex justify-center items-center'>
-                <Alert
-                    message="Error: Can not get stock"
-                    type="error"
-                    showIcon
-                />
+            <div className="w-full bg-slate-700 flex justify-center items-center">
+                {vmDetail.error ? (
+                    <Alert
+                        message="Error: Can not get vending machine detail"
+                        type="error"
+                        showIcon
+                    />
+                ) : (
+                    <></>
+                )}
+                {stock.error ? (
+                    <Alert
+                        message="Error: Can not get stock"
+                        type="error"
+                        showIcon
+                    />
+                ) : (
+                    <></>
+                )}
             </div>
         );
 
     const renderProducts = () =>
-        data.map((e, i) => <ItemProduct key={i} item={e} />);
+        stock.data.map((e, i) => <ItemProduct key={i} item={e} />);
 
-    return isLoading ? (
+    return stock.isLoading ? (
         <AppLoadingFullScreen />
     ) : (
         <div className="w-full bg-[#0D2491]">
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex flex-col items-center justify-center p-4">
                 <h1 className="text-xl text-slate-50">
-                    Simple Vending Machine
+                    {vmDetail.data.name || 'Simple Vending Machine'}
                 </h1>
             </div>
             <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-8">

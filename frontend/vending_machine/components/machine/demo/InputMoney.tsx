@@ -1,5 +1,5 @@
 'use client';
-import { Banknote, Coin } from '@/type/api/vending-machine';
+import { Banknote, Coin } from '@/type/api/vending-machine/get-vm-list';
 import { Button, Card, Tag } from 'antd';
 
 interface Props {

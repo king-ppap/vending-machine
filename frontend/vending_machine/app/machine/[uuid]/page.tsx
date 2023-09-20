@@ -1,7 +1,7 @@
 'use client';
 import Machine from '@/components/machine/Machine';
 import InputMoney from '@/components/machine/demo/InputMoney';
-import { Banknote, Coin } from '@/type/api/vending-machine';
+import { Banknote, Coin } from '@/type/api/vending-machine/get-vm-list';
 import { Switch } from 'antd';
 import { useState } from 'react';
 

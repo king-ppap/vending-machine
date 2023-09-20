@@ -4,10 +4,10 @@ import { Button, List, Typography } from 'antd';
 import {
     IGetVendingMachineListResponse,
     IVendingMachine,
-} from '@/type/api/vending-machine';
+} from '@/type/api/vending-machine/get-vm-list';
 import AppLoadingFullScreen from '@/components/app/AppLoadingFullScreen';
 import { useRouter } from 'next/navigation';
-import { useApiVendingMachineList } from '@/api/vending-machine';
+import { useApiGetVendingMachineList } from '@/api/vending-machine';
 
 // import getConfig from 'next/config'
 // const { publicRuntimeConfig } = getConfig();
@@ -29,7 +29,7 @@ export default function Home() {
         data: IGetVendingMachineListResponse;
         error: any;
         isLoading: boolean;
-    } = useApiVendingMachineList();
+    } = useApiGetVendingMachineList();
 
     if (error) {
         return <p>Cannot get vending-machine list</p>;

@@ -1,4 +1,4 @@
-import { Item } from '@/type/api/vending-machine/stock';
+import { Item } from '@/type/api/stock/stock';
 import { Button } from 'antd';
 
 interface Props {
