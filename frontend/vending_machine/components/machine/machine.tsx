@@ -1,7 +1,6 @@
 import { Banknote, Coin } from '@/type/api/vending-machine/get-vm-list';
 import ItemProduct from './ItemProduct';
 import { useStock } from '@/api/stock';
-import { StockResponse } from '@/type/api/stock/stock';
 import AppLoadingFullScreen from '../app/AppLoadingFullScreen';
 import { Alert } from 'antd';
 import { useApiVendingMachineDetail } from '@/api/vending-machine';
@@ -52,7 +51,7 @@ export default function Machine(props: Props) {
                     {vmDetail.data.name || 'Simple Vending Machine'}
                 </h1>
             </div>
-            <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-8">
+            <div className="max-h-[calc(100vh-60px)] overflow-y-auto grid gap-4 p-4 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-8 ">
                 {renderProducts()}
             </div>
         </div>
