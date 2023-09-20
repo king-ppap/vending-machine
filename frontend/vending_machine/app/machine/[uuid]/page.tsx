@@ -2,12 +2,13 @@
 import InputMoney from '@/components/machine/demo/InputMoney';
 import Machine from '@/components/machine/machine';
 import { Banknote, Coin } from '@/type/api/vending-machine';
-import { Button, Switch } from 'antd';
+import { Switch } from 'antd';
 import { useState } from 'react';
 
 export default function Page({ params }: { params: { uuid: string } }) {
     const [isShowDebug, setIsShowDebug] = useState(true);
     let [coins, setCoins] = useState<Coin[]>([]);
+    let [banknotes, setBanknotes] = useState<Coin[]>([]);
 
     const onChangeDebug = (checked: boolean) => {
         setIsShowDebug(checked);
@@ -41,8 +42,8 @@ export default function Page({ params }: { params: { uuid: string } }) {
                         />
                         <InputMoney
                             title="Input Banknote"
-                            coins={coins}
-                            setCoins={setCoins}
+                            coins={banknotes}
+                            setCoins={setBanknotes}
                             moneyList={[
                                 Banknote.BANKNOTE_20,
                                 Banknote.BANKNOTE_50,
