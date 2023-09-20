@@ -37,26 +37,32 @@ export default function Home() {
     return isLoading ? (
         <AppLoadingFullScreen />
     ) : (
-        <List
-            header={<div className="font-bold">Machine List</div>}
-            bordered
-            dataSource={data.results}
-            renderItem={(item: IVendingMachine) => (
-                <List.Item>
-                    <div className="w-full flex justify-between">
-                        <div>
-                            <Typography.Text mark>
-                                [{item.uuid}]
-                            </Typography.Text>{' '}
-                            {item.name}
+        <div>
+            {process.env.NEXT_PUBLIC_API_ROOT}
+            <List
+                header={<div className="font-bold">Machine List</div>}
+                bordered
+                dataSource={data.results}
+                renderItem={(item: IVendingMachine) => (
+                    <List.Item>
+                        <div className="w-full flex justify-between">
+                            <div>
+                                <Typography.Text mark>
+                                    [{item.uuid}]
+                                </Typography.Text>{' '}
+                                {item.name}
+                            </div>
+                            <Button
+                                type="primary"
+                                onClick={() => onClickOpen(item.uuid)}
+                            >
+                                Open
+                            </Button>
                         </div>
-                        <Button type="primary" onClick={() => onClickOpen(item.uuid)}>
-                            Open
-                        </Button>
-                    </div>
-                </List.Item>
-            )}
-            className="bg-white"
-        />
+                    </List.Item>
+                )}
+                className="bg-white"
+            />
+        </div>
     );
 }
