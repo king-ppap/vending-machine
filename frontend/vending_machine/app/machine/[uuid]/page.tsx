@@ -31,7 +31,7 @@ export default function Page({ params }: { params: { uuid: string } }) {
                 )}
             </div>
             <div className="w-full h-full flex justify-between">
-                <Machine coins={coins} banknotes={banknotes} />
+                <Machine uuid={params.uuid} coins={coins} banknotes={banknotes} />
                 {isShowDebug ? (
                     <div className="max-w-[400px] min-w-[400px] bg-slate-300 p-">
                         <InputMoney

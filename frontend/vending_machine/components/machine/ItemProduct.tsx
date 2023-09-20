@@ -6,7 +6,7 @@ interface Props {
     item: Item
 }
 
-export default function Item(props: Props) {
+export default function ItemProduct(props: Props) {
     return (
         <div className="flex flex-col ">
             <Image src={props.item.product.image} alt={props.item.product.name} />
