@@ -1,22 +1,26 @@
 'use client';
+import { MoneyType } from '@/type/api/stock/stock';
 import { Banknote, Coin } from '@/type/api/vending-machine/get-vm-list';
 import { Button, Card, Tag } from 'antd';
 
 interface Props {
     title: string;
-    coins: (Coin | Banknote)[];
-    setCoins: Function;
+    moneyType: MoneyType;
+    moneys: (Coin | Banknote)[];
+    setMoneys: Function;
     moneyList: (Coin | Banknote)[];
+    onAddMoney: Function;
 }
 
 export default function InputMoney(props: Props) {
     const handleRemoveCoin = (index: number) => {
-        const newCoins = props.coins.filter((tag, i) => i !== index);
-        props.setCoins(newCoins);
+        const newCoins = props.moneys.filter((tag, i) => i !== index);
+        props.setMoneys(newCoins);
     };
 
-    const onClickAddCoin = (coin: Coin | Banknote) => {
-        props.setCoins([...props.coins, coin]);
+    const onClickAddCoin = (money: Coin | Banknote) => {
+        props.setMoneys([...props.moneys, money]);
+        props.onAddMoney(money, props.moneyType)
     };
 
     const forMap = (tag: Coin | Banknote, index: number) => {
@@ -34,10 +38,10 @@ export default function InputMoney(props: Props) {
         return <span key={index}>{tagElem}</span>;
     };
 
-    const tagChild: JSX.Element[] = props.coins.map(forMap);
+    const tagChild: JSX.Element[] = props.moneys.map(forMap);
 
     return (
-        <Card title={props.title} className="bg-white">
+        <Card title={props.title}>
             <div className="flex">
                 {props.moneyList.map((e, i) => {
                     return (

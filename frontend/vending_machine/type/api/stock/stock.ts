@@ -15,3 +15,5 @@ export interface IProductDetail {
     image: string
     category: number
 }
+
+export type MoneyType = 'coin' | 'banknote';

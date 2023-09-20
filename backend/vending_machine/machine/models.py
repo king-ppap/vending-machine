@@ -11,11 +11,11 @@ class VendingMachine(models.Model):
     coin_1 = models.PositiveIntegerField(default=0)
     coin_5 = models.PositiveIntegerField(default=0)
     coin_10 = models.PositiveIntegerField(default=0)
-    banknotes_20 = models.PositiveIntegerField(default=0)
-    banknotes_50 = models.PositiveIntegerField(default=0)
-    banknotes_100 = models.PositiveIntegerField(default=0)
-    banknotes_500 = models.PositiveIntegerField(default=0)
-    banknotes_1000 = models.PositiveIntegerField(default=0)
+    banknote_20 = models.PositiveIntegerField(default=0)
+    banknote_50 = models.PositiveIntegerField(default=0)
+    banknote_100 = models.PositiveIntegerField(default=0)
+    banknote_500 = models.PositiveIntegerField(default=0)
+    banknote_1000 = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.name
