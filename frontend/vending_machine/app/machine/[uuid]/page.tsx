@@ -3,12 +3,20 @@ import Machine from '@/components/machine/Machine';
 import InputMoney from '@/components/machine/demo/InputMoney';
 import { Banknote, Coin } from '@/type/api/vending-machine/get-vm-list';
 import { Switch } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Page({ params }: { params: { uuid: string } }) {
     const [isShowDebug, setIsShowDebug] = useState(true);
     let [coins, setCoins] = useState<Coin[]>([]);
     let [banknotes, setBanknotes] = useState<Banknote[]>([]);
+    let [sumMoney, setSumMoney] = useState<number>(0);
+
+    useEffect(() => {
+        let sum = 0;
+        if (coins.length) sum = sum + coins.reduce((a, b) => a + b);
+        if (banknotes.length) sum = sum + banknotes.reduce((a, b) => a + b);
+        setSumMoney(sum);
+    }, [coins, banknotes]);
 
     const onChangeDebug = (checked: boolean) => {
         setIsShowDebug(checked);
@@ -31,7 +39,12 @@ export default function Page({ params }: { params: { uuid: string } }) {
                 )}
             </div>
             <div className="w-full h-full flex justify-between">
-                <Machine uuid={params.uuid} coins={coins} banknotes={banknotes} />
+                <Machine
+                    uuid={params.uuid}
+                    coins={coins}
+                    banknotes={banknotes}
+                    sumMoney={sumMoney}
+                />
                 {isShowDebug ? (
                     <div className="max-w-[400px] min-w-[400px] bg-slate-300 p-">
                         <InputMoney
@@ -49,7 +62,7 @@ export default function Page({ params }: { params: { uuid: string } }) {
                                 Banknote.BANKNOTE_50,
                                 Banknote.BANKNOTE_100,
                                 Banknote.BANKNOTE_500,
-                                Banknote.BANKNOTE_1000
+                                Banknote.BANKNOTE_1000,
                             ]}
                         />
                     </div>

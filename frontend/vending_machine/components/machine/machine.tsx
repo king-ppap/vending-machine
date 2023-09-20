@@ -9,6 +9,7 @@ interface Props {
     uuid: string;
     coins: Coin[];
     banknotes: Banknote[];
+    sumMoney: number;
 }
 
 export default function Machine(props: Props) {
@@ -40,7 +41,7 @@ export default function Machine(props: Props) {
         );
 
     const renderProducts = () =>
-        stock.data.map((e, i) => <ItemProduct key={i} item={e} />);
+        stock.data.map((e, i) => <ItemProduct key={i} item={e} money={props.sumMoney}/>);
 
     return stock.isLoading ? (
         <AppLoadingFullScreen />
