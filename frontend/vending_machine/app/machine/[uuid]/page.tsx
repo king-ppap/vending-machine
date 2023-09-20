@@ -116,10 +116,15 @@ export default function Page({ params }: { params: { uuid: string } }) {
         };
     };
     const onAddMoney = (money: Coin | Banknote, moneyType: MoneyType) => {
-            useApiVendingMachinePatchDetail(params.uuid, {
-                [`${moneyType}`]: money,
-            })
-    }
+        const moneyKey = `${moneyType}_${money}`;
+        console.log('onAddMoney', {
+            [moneyKey]: vmDetail.data[moneyKey] + 1,
+        });
+
+        useApiVendingMachinePatchDetail(params.uuid, {
+            [moneyKey]: vmDetail.data[moneyKey] + 1,
+        });
+    };
 
     const forMapTagRefundMoney = (tag: Coin | Banknote, index: number) => {
         const tagElem = <Tag color="blue">{tag}</Tag>;

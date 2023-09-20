@@ -9,5 +9,4 @@ export interface IPatchVmDetail {
     banknotes_100?: number
     banknotes_500?: number
     banknotes_1000?: number
-  }
-  
+}
