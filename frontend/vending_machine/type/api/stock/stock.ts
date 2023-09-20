@@ -1,13 +1,13 @@
-export type StockResponse = Item[]
+export type TStockResponse = IItemProduct[]
 
-export interface Item {
+export interface IItemProduct {
     id: number
-    product: ProductDetail
+    product: IProductDetail
     count: number
     machine: string
 }
 
-export interface ProductDetail {
+export interface IProductDetail {
     id: number
     code: string
     name: string

@@ -1,9 +1,10 @@
-import { Item } from '@/type/api/stock/stock';
+import { IItemProduct } from '@/type/api/stock/stock';
 import { Button } from 'antd';
 
 interface Props {
-    item: Item;
+    item: IItemProduct;
     money: number;
+    onClickBuy: Function;
 }
 
 export default function ItemProduct(props: Props) {
@@ -21,6 +22,7 @@ export default function ItemProduct(props: Props) {
                 type="primary"
                 shape="round"
                 disabled={props.money < props.item.product.price}
+                onClick={() => props.onClickBuy(props.item)}
             >
                 Buy
             </Button>

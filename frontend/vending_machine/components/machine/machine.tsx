@@ -3,7 +3,7 @@ import ItemProduct from './ItemProduct';
 import AppLoadingFullScreen from '../app/AppLoadingFullScreen';
 import { Result } from 'antd';
 import { IGetVendingMachineDetailResponse } from '@/type/api/vending-machine/get-vm-detail';
-import { StockResponse } from '@/type/api/stock/stock';
+import { IItemProduct, TStockResponse } from '@/type/api/stock/stock';
 
 interface Props {
     uuid: string;
@@ -16,18 +16,13 @@ interface Props {
         error: any;
     };
     stock: {
-        data: StockResponse;
+        data: TStockResponse;
         isLoading: boolean;
         error: any;
     };
 }
 
 export default function Machine(props: Props) {
-    const renderProducts = () =>
-        props.stock.data.map((e, i) => (
-            <ItemProduct key={i} item={e} money={props.sumMoney} />
-        ));
-
     const {
         banknotes_100,
         banknotes_1000,
@@ -55,6 +50,15 @@ export default function Machine(props: Props) {
             </div>
         );
     }
+
+    const onClickBuy = (item: IItemProduct) => {
+
+    }
+    const renderProducts = () =>
+        props.stock.data.map((e, i) => (
+            <ItemProduct key={i} item={e} money={props.sumMoney} onClickBuy={onClickBuy}/>
+        ));
+
 
     return props.stock.isLoading ? (
         <AppLoadingFullScreen />

@@ -122,7 +122,7 @@ export default function Page({ params }: { params: { uuid: string } }) {
                         <div className="mt-2"></div>
                         <Card>
                             <TextArea
-                                rows={15}
+                                rows={13}
                                 value={JSON.stringify(vmDetail.data, null, ' ')}
                             ></TextArea>
                         </Card>
