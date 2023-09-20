@@ -38,11 +38,11 @@ export default function InputMoney(props: Props) {
 
     return (
         <Card title={props.title} className="bg-white">
-            <div className={`grid grid-cols-${props.moneyList.length + 1} grid-flow-col gap-2`}>
-                <p>Add: </p>
+            <div className="flex">
                 {props.moneyList.map((e, i) => {
                     return (
                         <Button
+                            className="mr-2"
                             key={i}
                             type="primary"
                             onClick={() => onClickAddCoin(e)}

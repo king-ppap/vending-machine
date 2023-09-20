@@ -2,14 +2,15 @@
 import Machine from '@/components/machine/Machine';
 import InputMoney from '@/components/machine/demo/InputMoney';
 import { Banknote, Coin } from '@/type/api/vending-machine/get-vm-list';
-import { Switch } from 'antd';
+import { Button, Card, Switch, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 
 export default function Page({ params }: { params: { uuid: string } }) {
     const [isShowDebug, setIsShowDebug] = useState(true);
-    let [coins, setCoins] = useState<Coin[]>([]);
-    let [banknotes, setBanknotes] = useState<Banknote[]>([]);
-    let [sumMoney, setSumMoney] = useState<number>(0);
+    const [coins, setCoins] = useState<Coin[]>([]);
+    const [banknotes, setBanknotes] = useState<Banknote[]>([]);
+    const [sumMoney, setSumMoney] = useState<number>(0);
+    const [refundMoney, setRefundMoney] = useState<(Coin | Banknote)[]>([]);
 
     useEffect(() => {
         let sum = 0;
@@ -21,6 +22,18 @@ export default function Page({ params }: { params: { uuid: string } }) {
     const onChangeDebug = (checked: boolean) => {
         setIsShowDebug(checked);
     };
+
+    const onClickRefund = () => {
+        setRefundMoney([...coins, ...banknotes]);
+        setCoins([]);
+        setBanknotes([]);
+    };
+
+    const forMap = (tag: Coin | Banknote, index: number) => {
+        const tagElem = <Tag color="blue">{tag}</Tag>;
+        return <span key={index}>{tagElem}</span>;
+    };
+    const tagRefundMoney: JSX.Element[] = refundMoney.map(forMap);
 
     return (
         <div className="w-full h-[100vh]">
@@ -46,13 +59,22 @@ export default function Page({ params }: { params: { uuid: string } }) {
                     sumMoney={sumMoney}
                 />
                 {isShowDebug ? (
-                    <div className="max-w-[400px] min-w-[400px] bg-slate-300 p-">
+                    <div className="max-w-[400px] min-w-[400px] bg-slate-300 p-2">
+                        <Card>
+                            <p>Money: {sumMoney}</p>
+                            <Button className="my-2" onClick={onClickRefund}>
+                                Refund
+                            </Button>
+                            <p>Refund box: {tagRefundMoney}</p>
+                        </Card>
+                        <div className="mt-2"></div>
                         <InputMoney
                             title="Input Coin"
                             coins={coins}
                             setCoins={setCoins}
                             moneyList={[Coin.COIN_1, Coin.COIN_5, Coin.COIN_10]}
                         />
+                        <div className="mt-2"></div>
                         <InputMoney
                             title="Input Banknote"
                             coins={banknotes}
