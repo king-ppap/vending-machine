@@ -1,9 +1,7 @@
 import { Banknote, Coin } from '@/type/api/vending-machine/get-vm-list';
 import ItemProduct from './ItemProduct';
-import { useStock } from '@/api/stock';
 import AppLoadingFullScreen from '../app/AppLoadingFullScreen';
-import { Alert } from 'antd';
-import { useApiVendingMachineDetail } from '@/api/vending-machine';
+import { Result } from 'antd';
 import { IGetVendingMachineDetailResponse } from '@/type/api/vending-machine/get-vm-detail';
 import { StockResponse } from '@/type/api/stock/stock';
 
@@ -29,6 +27,34 @@ export default function Machine(props: Props) {
         props.stock.data.map((e, i) => (
             <ItemProduct key={i} item={e} money={props.sumMoney} />
         ));
+
+    const {
+        banknotes_100,
+        banknotes_1000,
+        banknotes_20,
+        banknotes_50,
+        banknotes_500,
+        coin_1,
+        coin_10,
+        coin_5,
+    } = props.vmDetail.data;
+    if (
+        banknotes_100 +
+            banknotes_1000 +
+            banknotes_20 +
+            banknotes_50 +
+            banknotes_500 +
+            coin_1 +
+            coin_10 +
+            coin_5 <=
+        0
+    ) {
+        return (
+            <div className='w-full flex justify-center items-center'>
+                <Result status="error" title="Out of service." subTitle="Insufficient funds" />
+            </div>
+        );
+    }
 
     return props.stock.isLoading ? (
         <AppLoadingFullScreen />
