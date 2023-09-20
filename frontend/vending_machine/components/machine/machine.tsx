@@ -12,7 +12,7 @@ interface Props {
 export default function Machine(props: Props) {
     const { data, isLoading } = useStock(props.uuid);
 
-    const renderProducts = () => data.map((e) => <ItemProduct item={e} />);
+    const renderProducts = () => data.map((e, i) => <ItemProduct key={i} item={e} />);
 
     return (
         <div className="w-full bg-[#0D2491]">
