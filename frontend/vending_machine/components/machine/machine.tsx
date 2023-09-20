@@ -3,7 +3,7 @@ import ItemProduct from './ItemProduct';
 import AppLoadingFullScreen from '../app/AppLoadingFullScreen';
 import { Result } from 'antd';
 import { IGetVendingMachineDetailResponse } from '@/type/api/vending-machine/get-vm-detail';
-import { IItemProduct, TStockResponse } from '@/type/api/stock/stock';
+import { TStockResponse } from '@/type/api/stock/stock';
 
 interface Props {
     uuid: string;
@@ -20,47 +20,55 @@ interface Props {
         isLoading: boolean;
         error: any;
     };
+    onClickBuy: Function;
 }
 
 export default function Machine(props: Props) {
-    const {
-        banknotes_100,
-        banknotes_1000,
-        banknotes_20,
-        banknotes_50,
-        banknotes_500,
-        coin_1,
-        coin_10,
-        coin_5,
-    } = props.vmDetail.data;
-    if (
-        banknotes_100 +
-            banknotes_1000 +
-            banknotes_20 +
-            banknotes_50 +
-            banknotes_500 +
-            coin_1 +
-            coin_10 +
-            coin_5 <=
-        0
-    ) {
-        return (
-            <div className='w-full flex justify-center items-center'>
-                <Result status="error" title="Out of service." subTitle="Insufficient funds" />
-            </div>
-        );
+    if (!props.vmDetail.isLoading) {
+        const {
+            banknotes_100,
+            banknotes_1000,
+            banknotes_20,
+            banknotes_50,
+            banknotes_500,
+            coin_1,
+            coin_10,
+            coin_5,
+        } = props.vmDetail.data;
+        if (
+            banknotes_100 +
+                banknotes_1000 +
+                banknotes_20 +
+                banknotes_50 +
+                banknotes_500 +
+                coin_1 +
+                coin_10 +
+                coin_5 <=
+            0
+        ) {
+            return (
+                <div className="w-full flex justify-center items-center">
+                    <Result
+                        status="error"
+                        title="Out of service."
+                        subTitle="Insufficient funds"
+                    />
+                </div>
+            );
+        }
     }
 
-    const onClickBuy = (item: IItemProduct) => {
-
-    }
     const renderProducts = () =>
         props.stock.data.map((e, i) => (
-            <ItemProduct key={i} item={e} money={props.sumMoney} onClickBuy={onClickBuy}/>
+            <ItemProduct
+                key={i}
+                item={e}
+                money={props.sumMoney}
+                onClickBuy={props.onClickBuy}
+            />
         ));
 
-
-    return props.stock.isLoading ? (
+    return props.stock.isLoading || props.vmDetail.isLoading ? (
         <AppLoadingFullScreen />
     ) : (
         <div className="w-full bg-[#0D2491]">

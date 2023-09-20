@@ -3,6 +3,7 @@ import { useStock } from '@/api/stock';
 import { useApiVendingMachineDetail } from '@/api/vending-machine';
 import Machine from '@/components/machine/Machine';
 import InputMoney from '@/components/machine/demo/InputMoney';
+import { IItemProduct } from '@/type/api/stock/stock';
 import { Banknote, Coin } from '@/type/api/vending-machine/get-vm-list';
 import { Alert, Button, Card, Switch, Tag, Input } from 'antd';
 import { useEffect, useState } from 'react';
@@ -65,6 +66,10 @@ export default function Page({ params }: { params: { uuid: string } }) {
     };
     const tagRefundMoney: JSX.Element[] = refundMoney.map(forMap);
 
+    const onClickBuy = (item: IItemProduct) => {
+        item.product.price;
+    };
+
     return (
         <div className="w-full h-[100vh]">
             <div>
@@ -89,6 +94,7 @@ export default function Page({ params }: { params: { uuid: string } }) {
                     coins={coins}
                     banknotes={banknotes}
                     sumMoney={sumMoney}
+                    onClickBuy={onClickBuy}
                 />
                 {isShowDebug ? (
                     <div className="max-w-[400px] min-w-[400px] bg-slate-300 p-2">
