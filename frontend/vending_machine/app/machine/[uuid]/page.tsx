@@ -1,7 +1,7 @@
 'use client';
 import InputMoney from '@/components/machine/demo/InputMoney';
 import Machine from '@/components/machine/machine';
-import { Banknotes, Coin } from '@/type/api/vending-machine';
+import { Banknote, Coin } from '@/type/api/vending-machine';
 import { Button, Switch } from 'antd';
 import { useState } from 'react';
 
@@ -44,11 +44,11 @@ export default function Page({ params }: { params: { uuid: string } }) {
                             coins={coins}
                             setCoins={setCoins}
                             moneyList={[
-                                Banknotes.BANKNOTES_20,
-                                Banknotes.BANKNOTES_50,
-                                Banknotes.BANKNOTES_100,
-                                Banknotes.BANKNOTES_500,
-                                Banknotes.BANKNOTES_1000
+                                Banknote.BANKNOTE_20,
+                                Banknote.BANKNOTE_50,
+                                Banknote.BANKNOTE_100,
+                                Banknote.BANKNOTE_500,
+                                Banknote.BANKNOTE_1000
                             ]}
                         />
                     </div>

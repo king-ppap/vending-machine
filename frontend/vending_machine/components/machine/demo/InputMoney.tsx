@@ -1,12 +1,12 @@
 'use client';
-import { Banknotes, Coin } from '@/type/api/vending-machine';
+import { Banknote, Coin } from '@/type/api/vending-machine';
 import { Button, Card, Tag } from 'antd';
 
 interface Props {
     title: string;
-    coins: (Coin | Banknotes)[];
+    coins: (Coin | Banknote)[];
     setCoins: Function;
-    moneyList: (Coin | Banknotes)[];
+    moneyList: (Coin | Banknote)[];
 }
 
 export default function InputMoney(props: Props) {
@@ -15,11 +15,11 @@ export default function InputMoney(props: Props) {
         props.setCoins(newCoins);
     };
 
-    const onClickAddCoin = (coin: Coin | Banknotes) => {
+    const onClickAddCoin = (coin: Coin | Banknote) => {
         props.setCoins([...props.coins, coin]);
     };
 
-    const forMap = (tag: Coin, index: number) => {
+    const forMap = (tag: Coin | Banknote, index: number) => {
         const tagElem = (
             <Tag
                 closable
@@ -34,7 +34,7 @@ export default function InputMoney(props: Props) {
         return <span key={index}>{tagElem}</span>;
     };
 
-    const tagChild = props.coins.map(forMap);
+    const tagChild: JSX.Element[] = props.coins.map(forMap);
 
     return (
         <Card title={props.title} className="bg-white">

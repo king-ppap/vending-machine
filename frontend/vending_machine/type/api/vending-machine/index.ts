@@ -25,10 +25,10 @@ export enum Coin {
     COIN_10 = 10,
 }
 
-export enum Banknotes {
-    BANKNOTES_20 = 20,
-    BANKNOTES_50 = 50,
-    BANKNOTES_100 = 100,
-    BANKNOTES_500 = 500,
-    BANKNOTES_1000 = 1000,
+export enum Banknote {
+    BANKNOTE_20 = 20,
+    BANKNOTE_50 = 50,
+    BANKNOTE_100 = 100,
+    BANKNOTE_500 = 500,
+    BANKNOTE_1000 = 1000,
 }
