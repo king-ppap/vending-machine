@@ -1,11 +1,12 @@
 'use client';
 import useSWR from 'swr';
-import { List, Typography } from 'antd';
+import { Button, List, Typography } from 'antd';
 import {
     IGetVendingMachineListResponse,
     IVendingMachine,
 } from '@/type/api/vending-machine';
 import AppLoadingFullScreen from '@/components/app/AppLoadingFullScreen';
+import { useRouter } from 'next/navigation';
 
 // import getConfig from 'next/config'
 // const { publicRuntimeConfig } = getConfig();
@@ -13,6 +14,12 @@ import AppLoadingFullScreen from '@/components/app/AppLoadingFullScreen';
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 export default function Home() {
+    const router = useRouter();
+
+    const onClickOpen = (uuid: string) => {
+        router.push(`machine/${uuid}`);
+    };
+
     const {
         data,
         error,
@@ -31,13 +38,22 @@ export default function Home() {
         <AppLoadingFullScreen />
     ) : (
         <List
-            header={<div>Machine List</div>}
+            header={<div className="font-bold">Machine List</div>}
             bordered
             dataSource={data.results}
             renderItem={(item: IVendingMachine) => (
                 <List.Item>
-                    <Typography.Text mark>[{item.uuid}]</Typography.Text>{' '}
-                    {item.name}
+                    <div className="w-full flex justify-between">
+                        <div>
+                            <Typography.Text mark>
+                                [{item.uuid}]
+                            </Typography.Text>{' '}
+                            {item.name}
+                        </div>
+                        <Button type="primary" onClick={() => onClickOpen(item.uuid)}>
+                            Open
+                        </Button>
+                    </div>
                 </List.Item>
             )}
             className="bg-white"
