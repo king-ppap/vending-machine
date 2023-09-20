@@ -1,11 +1,41 @@
 'use client';
+import { useStock } from '@/api/stock';
+import { useApiVendingMachineDetail } from '@/api/vending-machine';
 import Machine from '@/components/machine/Machine';
 import InputMoney from '@/components/machine/demo/InputMoney';
 import { Banknote, Coin } from '@/type/api/vending-machine/get-vm-list';
-import { Button, Card, Switch, Tag } from 'antd';
+import { Alert, Button, Card, Switch, Tag, Input } from 'antd';
 import { useEffect, useState } from 'react';
+const { TextArea } = Input;
 
 export default function Page({ params }: { params: { uuid: string } }) {
+    const vmDetail = useApiVendingMachineDetail(params.uuid);
+    const stock = useStock(params.uuid);
+
+    if (vmDetail.error || stock.error)
+        return (
+            <div className="w-full bg-slate-700 flex justify-center items-center">
+                {vmDetail.error ? (
+                    <Alert
+                        message="Error: Can not get vending machine detail"
+                        type="error"
+                        showIcon
+                    />
+                ) : (
+                    <></>
+                )}
+                {stock.error ? (
+                    <Alert
+                        message="Error: Can not get stock"
+                        type="error"
+                        showIcon
+                    />
+                ) : (
+                    <></>
+                )}
+            </div>
+        );
+
     const [isShowDebug, setIsShowDebug] = useState(true);
     const [coins, setCoins] = useState<Coin[]>([]);
     const [banknotes, setBanknotes] = useState<Banknote[]>([]);
@@ -53,6 +83,8 @@ export default function Page({ params }: { params: { uuid: string } }) {
             </div>
             <div className="w-full h-full flex justify-between">
                 <Machine
+                    vmDetail={vmDetail}
+                    stock={stock}
                     uuid={params.uuid}
                     coins={coins}
                     banknotes={banknotes}
@@ -87,6 +119,13 @@ export default function Page({ params }: { params: { uuid: string } }) {
                                 Banknote.BANKNOTE_1000,
                             ]}
                         />
+                        <div className="mt-2"></div>
+                        <Card>
+                            <TextArea
+                                rows={15}
+                                value={JSON.stringify(vmDetail.data, null, ' ')}
+                            ></TextArea>
+                        </Card>
                     </div>
                 ) : (
                     <></>
