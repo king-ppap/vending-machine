@@ -1,6 +1,6 @@
 'use client';
+import Machine from '@/components/machine/Machine';
 import InputMoney from '@/components/machine/demo/InputMoney';
-import Machine from '@/components/machine/machine';
 import { Banknote, Coin } from '@/type/api/vending-machine';
 import { Switch } from 'antd';
 import { useState } from 'react';
@@ -8,7 +8,7 @@ import { useState } from 'react';
 export default function Page({ params }: { params: { uuid: string } }) {
     const [isShowDebug, setIsShowDebug] = useState(true);
     let [coins, setCoins] = useState<Coin[]>([]);
-    let [banknotes, setBanknotes] = useState<Coin[]>([]);
+    let [banknotes, setBanknotes] = useState<Banknote[]>([]);
 
     const onChangeDebug = (checked: boolean) => {
         setIsShowDebug(checked);
@@ -31,7 +31,7 @@ export default function Page({ params }: { params: { uuid: string } }) {
                 )}
             </div>
             <div className="w-full h-full flex justify-between">
-                <Machine />
+                <Machine coins={coins} banknotes={banknotes} />
                 {isShowDebug ? (
                     <div className="max-w-[400px] min-w-[400px] bg-slate-300 p-">
                         <InputMoney
