@@ -7,7 +7,7 @@ interface Props {
 }
 
 export default function ItemProduct(props: Props) {
-    return (
+    return props.item.count > 0 ? (
         <div className="flex flex-col justify-center items-center text-white">
             <img
                 className="w-[100px] h-[100px]"
@@ -24,5 +24,7 @@ export default function ItemProduct(props: Props) {
                 Buy
             </Button>
         </div>
+    ) : (
+        <></>
     );
 }
