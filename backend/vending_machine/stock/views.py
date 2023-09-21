@@ -32,6 +32,7 @@ class ItemsInMachineViewSet(ModelViewSet):
     permission_classes = [AllowAny]
     queryset = ItemsInMachine.objects.all()
     serializer_class = ItemsInMachineSerializer
+    ordering_fields = '__all__'
 
 
 class ItemsInMachineGenericViewSet(GenericViewSet):
@@ -40,7 +41,7 @@ class ItemsInMachineGenericViewSet(GenericViewSet):
 
     @action(methods=['get'], detail=False, url_path='(?P<uuid>[^/.]+)')
     def get_items_in_machine_with_uuid(self, request, uuid):
-        items = ItemsInMachine.objects.filter(machine__uuid=uuid)
+        items = ItemsInMachine.objects.filter(machine__uuid=uuid).order_by('pk')
         return Response(ItemsInMachineSerializer(items, many=True, context={"request": request}).data)
 
     @extend_schema(
