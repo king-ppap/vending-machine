@@ -72,7 +72,7 @@ export default function Machine(props: Props) {
                     {props.vmDetail.name || 'Simple Vending Machine'}
                 </h1>
             </div>
-            <div className="max-h-[calc(100vh-60px)] overflow-y-auto grid gap-4 p-4 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-8 ">
+            <div className="max-h-[calc(100vh-60px)] overflow-y-auto grid gap-4 p-4 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 ">
                 {renderProducts()}
             </div>
         </div>
