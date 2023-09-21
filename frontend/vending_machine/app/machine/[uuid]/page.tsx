@@ -50,7 +50,7 @@ export default function Page({ params }: { params: { uuid: string } }) {
         coins: Coin[];
         banknotes: Banknote[];
     }>({ coins: [], banknotes: [] });
-    const [errorModal, setErrorModal] = useState<{
+    const [modalData, setModalData] = useState<{
         title: string;
         message: string;
     } | null>(null);
@@ -110,10 +110,14 @@ export default function Page({ params }: { params: { uuid: string } }) {
                 const displayChange = prepareDisplayChange(res);
                 setMoneyBox(displayChange);
                 resetMoney();
+                setModalData({
+                    title: "Yeah!",
+                    message: `Here this is your ${item.product.name}`
+                })
             })
             .catch((error) => {
                 console.error('Error:', error);
-                setErrorModal({
+                setModalData({
                     title: 'Opos!',
                     message: error.message,
                 });
@@ -223,11 +227,11 @@ export default function Page({ params }: { params: { uuid: string } }) {
                 )}
             </div>
             <Modal
-                title={errorModal?.title}
-                open={!!errorModal}
-                onOk={() => setErrorModal(null)}
+                title={modalData?.title}
+                open={!!modalData}
+                onOk={() => setModalData(null)}
             >
-                <p>{errorModal?.message}</p>
+                <p>{modalData?.message}</p>
             </Modal>
         </div>
     );
