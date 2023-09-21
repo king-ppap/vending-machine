@@ -43,7 +43,10 @@ export default function Page({ params }: { params: { uuid: string } }) {
     const [coins, setCoins] = useState<Coin[]>([]);
     const [banknotes, setBanknotes] = useState<Banknote[]>([]);
     const [sumMoney, setSumMoney] = useState<number>(0);
-    const [refundMoney, setRefundMoney] = useState<(Coin | Banknote)[]>([]);
+    const [refundMoney, setRefundMoney] = useState<{
+        coins: Coin[];
+        banknotes: Banknote[];
+    }>({ coins: [], banknotes: [] });
 
     useEffect(() => {
         let sum = 0;
@@ -56,7 +59,7 @@ export default function Page({ params }: { params: { uuid: string } }) {
         setIsShowDebug(checked);
     };
     const onClickRefund = () => {
-        setRefundMoney([...coins, ...banknotes]);
+        setRefundMoney({ coins, banknotes });
         setCoins([]);
         setBanknotes([]);
     };
@@ -78,11 +81,20 @@ export default function Page({ params }: { params: { uuid: string } }) {
         });
     };
 
-    const forMapTagRefundMoney = (tag: Coin | Banknote, index: number) => {
-        const tagElem = <Tag color="blue">{tag}</Tag>;
-        return <span key={index}>{tagElem}</span>;
+    const renderMoneyBox = () => {
+        const coinsR = refundMoney.coins.map((e, i) => (
+            <Tag key={`c-${i}`} color="blue">
+                {e}
+            </Tag>
+        ));
+        const banknotesR = refundMoney.banknotes.map((e, i) => (
+            <Tag key={`b-${i}`} color="volcano">
+                {e}
+            </Tag>
+        ));
+        const tagElem = [...coinsR, ...banknotesR];
+        return <span>{tagElem}</span>;
     };
-    const tagRefundMoney = refundMoney.map(forMapTagRefundMoney);
 
     return (
         <div className="w-full h-[100vh]">
@@ -119,7 +131,7 @@ export default function Page({ params }: { params: { uuid: string } }) {
                             <Button className="my-2" onClick={onClickRefund}>
                                 Refund
                             </Button>
-                            <p>Refund box: {tagRefundMoney}</p>
+                            <p>Money box: {renderMoneyBox()}</p>
                         </Card>
                         <div className="mt-2"></div>
                         <InputMoney

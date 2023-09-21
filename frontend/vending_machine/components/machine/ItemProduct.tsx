@@ -15,7 +15,7 @@ export default function ItemProduct(props: Props) {
                 src={props.item.product.image}
                 alt={props.item.product.name}
             />
-            <p className="mt-2">{props.item.product.name}</p>
+            <p className="mt-2">{props.item.product.name} ({props.item.count})</p>
             <p>฿ {props.item.product.price}</p>
             <Button
                 className="mt-2"
