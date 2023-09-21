@@ -96,6 +96,8 @@ export default function Page({ params }: { params: { uuid: string } }) {
             setMoneyBox(displayChange);
             resetMoney();
             getVmData();
+        }).catch((error) => {
+            console.error("Error:", error);
         });
     };
     const onAddMoney = (money: Coin | Banknote, moneyType: MoneyType) => {
