@@ -1,9 +1,7 @@
 'use client';
 import { fetcher } from '@/api';
 import { useStock } from '@/api/stock';
-import {
-    useApiVendingMachineDetail,
-} from '@/api/vending-machine';
+import { useApiVendingMachineDetail } from '@/api/vending-machine';
 import useSWR from 'swr';
 import Machine from '@/components/machine/Machine';
 import InputMoney from '@/components/machine/demo/InputMoney';
@@ -116,21 +114,20 @@ export default function Page({ params }: { params: { uuid: string } }) {
 
     const onAddMoney = (money: Coin | Banknote, moneyType: MoneyType) => {
         const moneyKey = `${moneyType}_${money}`;
+        if (!vmDetail) return;
+
         fetcher(`/vending-machine/${params.uuid}/`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                [moneyKey]: vmDetail[moneyKey] + 1,
+                [moneyKey]: Number(vmDetail[moneyKey]) + 1,
             }),
         }).then((res) => {
             set่VmDetail(res);
         });
     };
-
-    // console.log(data);
-    // console.log(error);
 
     const forMapTagRefundMoney = (tag: Coin | Banknote, index: number) => {
         const tagElem = <Tag color="blue">{tag}</Tag>;
