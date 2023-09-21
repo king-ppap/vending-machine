@@ -66,6 +66,9 @@ export default function Page({ params }: { params: { uuid: string } }) {
         setCoins([]);
         setBanknotes([]);
     };
+    const resetMoneyBox = () => {
+        setMoneyBox({ coins: [], banknotes: [] });
+    };
 
     const onChangeDebug = (checked: boolean) => {
         setIsShowDebug(checked);
@@ -98,6 +101,8 @@ export default function Page({ params }: { params: { uuid: string } }) {
         return displayChange;
     };
     const onClickBuy = (item: IItemProduct) => {
+        resetMoneyBox();
+
         apiBuyItem(item.id, {
             user_amount: sumMoney,
         })
@@ -105,7 +110,6 @@ export default function Page({ params }: { params: { uuid: string } }) {
                 const displayChange = prepareDisplayChange(res);
                 setMoneyBox(displayChange);
                 resetMoney();
-                getVmData();
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -116,6 +120,9 @@ export default function Page({ params }: { params: { uuid: string } }) {
                 const displayChange = prepareDisplayChange(error.refund);
                 setMoneyBox(displayChange);
                 resetMoney();
+            })
+            .finally(() => {
+                getVmData();
             });
     };
     const onAddMoney = (money: Coin | Banknote, moneyType: MoneyType) => {
@@ -176,7 +183,7 @@ export default function Page({ params }: { params: { uuid: string } }) {
                     <div className="max-w-[400px] min-w-[400px] bg-slate-300 p-2">
                         <Card>
                             <p>Money: {sumMoney}</p>
-                            <Button className="my-2" onClick={onClickRefund}>
+                            <Button className="my-2" onClick={onClickRefund} disabled>
                                 Refund
                             </Button>
                             <p>Money box: {renderMoneyBox()}</p>
