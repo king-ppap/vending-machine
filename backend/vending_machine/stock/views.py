@@ -66,7 +66,7 @@ class ItemsInMachineGenericViewSet(GenericViewSet):
 
         result = find_min_change(change, item.machine.__dict__)
         if result == -1:
-            refund = find_min_without_limit(userAmount)
+            refund = find_min_change(userAmount, item.machine.__dict__)
 
             resultUpdateMoney = adjust_money(item.machine, refund)
             vm = VendingMachineSerializer(
