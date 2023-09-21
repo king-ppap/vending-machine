@@ -3,7 +3,7 @@ import { fetcher } from '@/api';
 import { useStock } from '@/api/stock';
 import {
     apiGetVendingMachinePatchDetail,
-    useApiVendingMachineDetail,
+    apiGetVendingMachineDetail,
 } from '@/api/vending-machine';
 import useSWR from 'swr';
 import Machine from '@/components/machine/Machine';
@@ -20,7 +20,7 @@ export default function Page({ params }: { params: { uuid: string } }) {
         useState<IGetVendingMachineDetailResponse | null>(null);
 
     useEffect(() => {
-        useApiVendingMachineDetail(params.uuid).then((res) => {
+        apiGetVendingMachineDetail(params.uuid).then((res) => {
             set่VmDetail(res);
         });
     }, []);
@@ -66,8 +66,8 @@ export default function Page({ params }: { params: { uuid: string } }) {
     const onClickBuy = (item: IItemProduct) => {
         item.product.price;
         const change = sumMoney - item.product.price;
-        const changeMoney = calChange(change);
-        console.log('onClickBuy', changeMoney);
+        // const changeMoney = calChange(change);
+        // console.log('onClickBuy', changeMoney);
     };
 
     const onAddMoney = (money: Coin | Banknote, moneyType: MoneyType) => {

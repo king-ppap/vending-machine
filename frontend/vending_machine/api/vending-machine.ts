@@ -14,7 +14,7 @@ const useApiGetVendingMachineList = () => {
     return { data, isLoading, error };
 }
 
-const useApiVendingMachineDetail = (uuid: string) => {
+const apiGetVendingMachineDetail = (uuid: string) => {
     const url = `/vending-machine/${uuid}/`;
     return fetcher(url);
 }
@@ -41,7 +41,7 @@ const useApiVendingMachinePatchDetailSwr = (uuid: string, body: IPatchVmDetail |
 
 export {
     useApiGetVendingMachineList,
-    useApiVendingMachineDetail,
+    apiGetVendingMachineDetail,
     apiGetVendingMachinePatchDetail,
     useApiVendingMachinePatchDetailSwr,
 }

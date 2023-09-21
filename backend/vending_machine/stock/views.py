@@ -1,13 +1,15 @@
+from .helper import findMinChange
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from drf_spectacular.types import OpenApiTypes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet, ModelViewSet
 from .models import Product, Category, ItemsInMachine
-from .serializers import ProductSerializer, CategorySerializer, ItemsInMachineSerializer, BuyItemRequestSerializer
+from .serializers import ProductSerializer, CategorySerializer, ItemsInMachineSerializer, BuyItemRequestSerializer, BuyItemResponseSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.renderers import JSONRenderer
-from django.core.exceptions import ObjectDoesNotExist
+from rest_framework import status
+from machine.serializers import VendingMachineSerializer
+from machine.models import VendingMachine
 
 import logging
 logger = logging.getLogger(__name__)
@@ -42,8 +44,23 @@ class ItemsInMachineGenericViewSet(GenericViewSet):
 
     @extend_schema(
         request=BuyItemRequestSerializer,
+        responses=BuyItemResponseSerializer,
     )
-    @action(methods=['post'], detail=False, url_path='(?P<uuid>[^/.]+)/buy/(?P<code>[^/.]+)')
-    def buy_item(self, request, uuid, code):
+    @action(methods=['post'], detail=False, url_path='(?P<uuid>[^/.]+)/buy/(?P<item_id>[^/.]+)')
+    def buy_item(self, request, uuid, item_id):
+        body = BuyItemRequestSerializer(data=request.data)
+        body.is_valid(raise_exception=True)
+        userAmount = body.data.get('user_amount', 0)
 
-        return Response([request.data, uuid, code])
+        vm = VendingMachine.objects.get(uuid=uuid)
+        item = ItemsInMachine.objects.get(pk=item_id)
+        price = item.product.price
+        change = userAmount - price
+        if change < 0:
+            return Response({"message": 'Insufficient funds'}, status=status.HTTP_400_BAD_REQUEST)
+
+        result = findMinChange(change, vm.__dict__)
+        if result == -1:
+            return Response({"message": 'Not enough money to change'}, status=505)
+
+        return Response(BuyItemResponseSerializer(result).data)
