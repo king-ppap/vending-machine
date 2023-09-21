@@ -83,7 +83,7 @@ class ItemsInMachineGenericViewSet(GenericViewSet):
             "banknote_1000": item.machine.banknote_1000 - result["banknote_1000"],
         }
         logger.debug(resultUpdateMoney)
-        vm = VendingMachineSerializer(data=resultUpdateMoney, partial=True)
+        vm = VendingMachineSerializer(item.machine, data=resultUpdateMoney, partial=True)
         if vm.is_valid():
             vm.save()
 
