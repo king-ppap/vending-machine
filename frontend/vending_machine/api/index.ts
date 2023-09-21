@@ -4,7 +4,7 @@ export const fetcher = async (url: string, option?: RequestInit) => {
     const response = await fetch(`${rootApiUrl}${url}`, option)
 
     if (!response.ok) {
-        throw response;
+        throw await response.json();
     }
     return response.json()
 }

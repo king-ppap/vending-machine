@@ -5,14 +5,14 @@ import {
     apiGetVendingMachinePatchDetail,
     apiGetVendingMachineDetail,
 } from '@/api/vending-machine';
-import useSWR from 'swr';
 import Machine from '@/components/machine/Machine';
 import InputMoney from '@/components/machine/demo/InputMoney';
 import { IItemProduct, MoneyType } from '@/type/api/stock/stock';
 import { Banknote, Coin } from '@/type/api/vending-machine/get-vm-list';
-import { Alert, Button, Card, Switch, Tag, Input } from 'antd';
+import { Alert, Button, Card, Switch, Tag, Input, Modal } from 'antd';
 import { useEffect, useState } from 'react';
 import { IGetVendingMachineDetailResponse } from '@/type/api/vending-machine/get-vm-detail';
+import { IBuyItemResponse } from '@/type/api/stock/buy-item';
 const { TextArea } = Input;
 
 export default function Page({ params }: { params: { uuid: string } }) {
@@ -50,6 +50,10 @@ export default function Page({ params }: { params: { uuid: string } }) {
         coins: Coin[];
         banknotes: Banknote[];
     }>({ coins: [], banknotes: [] });
+    const [errorModal, setErrorModal] = useState<{
+        title: string;
+        message: string;
+    } | null>(null);
 
     useEffect(() => {
         let sum = 0;
@@ -70,35 +74,49 @@ export default function Page({ params }: { params: { uuid: string } }) {
         setMoneyBox({ coins, banknotes });
         resetMoney();
     };
+
+    const prepareDisplayChange = (res: IBuyItemResponse) => {
+        let displayChange: {
+            coins: Coin[];
+            banknotes: Banknote[];
+        } = {
+            coins: [],
+            banknotes: [],
+        };
+        Object.entries(res).forEach(([key, value]) => {
+            const money = Number(key.split('_')[1]);
+            if (key.includes('b')) {
+                for (let index = 0; index < value; index++) {
+                    displayChange.banknotes.push(money);
+                }
+            } else {
+                for (let index = 0; index < value; index++) {
+                    displayChange.coins.push(money);
+                }
+            }
+        });
+        return displayChange;
+    };
     const onClickBuy = (item: IItemProduct) => {
         apiBuyItem(item.id, {
             user_amount: sumMoney,
-        }).then((res) => {
-            let displayChange: {
-                coins: Coin[];
-                banknotes: Banknote[];
-            } = {
-                coins: [],
-                banknotes: [],
-            };
-            Object.entries(res).forEach(([key, value]) => {
-                const money = Number(key.split('_')[1]);
-                if (key.includes('b')) {
-                    for (let index = 0; index < value; index++) {
-                        displayChange.banknotes.push(money);
-                    }
-                } else {
-                    for (let index = 0; index < value; index++) {
-                        displayChange.coins.push(money);
-                    }
-                }
+        })
+            .then((res) => {
+                const displayChange = prepareDisplayChange(res);
+                setMoneyBox(displayChange);
+                resetMoney();
+                getVmData();
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                setErrorModal({
+                    title: 'Opos!',
+                    message: error.message,
+                });
+                const displayChange = prepareDisplayChange(error.refund);
+                setMoneyBox(displayChange);
+                resetMoney();
             });
-            setMoneyBox(displayChange);
-            resetMoney();
-            getVmData();
-        }).catch((error) => {
-            console.error("Error:", error);
-        });
     };
     const onAddMoney = (money: Coin | Banknote, moneyType: MoneyType) => {
         const moneyKey = `${moneyType}_${money}`;
@@ -197,6 +215,13 @@ export default function Page({ params }: { params: { uuid: string } }) {
                     </div>
                 )}
             </div>
+            <Modal
+                title={errorModal?.title}
+                open={!!errorModal}
+                onOk={() => setErrorModal(null)}
+            >
+                <p>{errorModal?.message}</p>
+            </Modal>
         </div>
     );
 }
