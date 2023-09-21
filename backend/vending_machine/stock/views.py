@@ -1,3 +1,4 @@
+from django.forms.models import model_to_dict
 from django.db import transaction
 from .helper import find_min_change, adjust_money
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
@@ -34,7 +35,6 @@ class ItemsInMachineViewSet(ModelViewSet):
     serializer_class = ItemsInMachineSerializer
     ordering_fields = '__all__'
 
-import copy
 
 class ItemsInMachineGenericViewSet(GenericViewSet):
     serializer_class = ItemsInMachineSerializer(many=True)
@@ -42,7 +42,8 @@ class ItemsInMachineGenericViewSet(GenericViewSet):
 
     @action(methods=['get'], detail=False, url_path='(?P<uuid>[^/.]+)')
     def get_items_in_machine_with_uuid(self, request, uuid):
-        items = ItemsInMachine.objects.filter(machine__uuid=uuid).order_by('pk')
+        items = ItemsInMachine.objects.filter(
+            machine__uuid=uuid).order_by('pk')
         return Response(ItemsInMachineSerializer(items, many=True, context={"request": request}).data)
 
     @extend_schema(
@@ -65,10 +66,10 @@ class ItemsInMachineGenericViewSet(GenericViewSet):
         if change < 0:
             return Response({"message": 'Insufficient funds'}, status=status.HTTP_400_BAD_REQUEST)
 
-        result = find_min_change(change, copy.copy(item.machine.__dict__))
+        result = find_min_change(change, model_to_dict(item.machine))
 
         if result == -1:
-            refund = find_min_change(userAmount, copy.copy(item.machine.__dict__))
+            refund = find_min_change(userAmount, model_to_dict(item.machine))
 
             resultUpdateMoney = adjust_money(item.machine, refund)
             vmR = VendingMachineSerializer(
