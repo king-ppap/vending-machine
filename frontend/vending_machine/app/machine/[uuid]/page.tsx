@@ -1,7 +1,10 @@
 'use client';
 import { fetcher } from '@/api';
 import { useStock } from '@/api/stock';
-import { useApiVendingMachineDetail } from '@/api/vending-machine';
+import {
+    apiGetVendingMachinePatchDetail,
+    useApiVendingMachineDetail,
+} from '@/api/vending-machine';
 import useSWR from 'swr';
 import Machine from '@/components/machine/Machine';
 import InputMoney from '@/components/machine/demo/InputMoney';
@@ -63,67 +66,13 @@ export default function Page({ params }: { params: { uuid: string } }) {
         const changeMoney = calChange(change);
         console.log('onClickBuy', changeMoney);
     };
-    const calChange = (changeAmount: number) => {
-        let coins = [];
-        let banknotes = [];
-
-        let {
-            banknotes_100,
-            banknotes_1000,
-            banknotes_20,
-            banknotes_50,
-            banknotes_500,
-            coin_1,
-            coin_10,
-            coin_5,
-        } = vmDetail;
-
-        while (changeAmount > 0) {
-            if (changeAmount >= 1000) {
-                banknotes.push(1000);
-                changeAmount -= 1000;
-            } else if (changeAmount >= 500) {
-                banknotes.push(500);
-                changeAmount -= 500;
-            } else if (changeAmount >= 100) {
-                banknotes.push(100);
-                changeAmount -= 100;
-            } else if (changeAmount >= 50) {
-                banknotes.push(50);
-                changeAmount -= 50;
-            } else if (changeAmount >= 20) {
-                banknotes.push(20);
-                changeAmount -= 20;
-            } else if (changeAmount >= 10) {
-                coins.push(10);
-                changeAmount -= 10;
-            } else if (changeAmount >= 5) {
-                coins.push(5);
-                changeAmount -= 5;
-            } else if (changeAmount >= 1) {
-                coins.push(1);
-                changeAmount -= 1;
-            }
-        }
-
-        return {
-            coins,
-            banknotes,
-        };
-    };
 
     const onAddMoney = (money: Coin | Banknote, moneyType: MoneyType) => {
         const moneyKey = `${moneyType}_${money}`;
         if (!vmDetail) return;
 
-        fetcher(`/vending-machine/${params.uuid}/`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                [moneyKey]: Number(vmDetail[moneyKey]) + 1,
-            }),
+        apiGetVendingMachinePatchDetail(params.uuid, {
+            [moneyKey]: Number(vmDetail[moneyKey]) + 1,
         }).then((res) => {
             set่VmDetail(res);
         });

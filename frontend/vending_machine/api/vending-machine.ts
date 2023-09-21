@@ -19,6 +19,16 @@ const useApiVendingMachineDetail = (uuid: string) => {
     return fetcher(url);
 }
 
+const apiGetVendingMachinePatchDetail = (uuid: string, body: IPatchVmDetail) => {
+    return fetcher(`/vending-machine/${uuid}/`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+    });
+}
+
 const useApiVendingMachinePatchDetailSwr = (uuid: string, body: IPatchVmDetail | null) => {
     const url = `/vending-machine/${uuid}/`;
     const { data, isLoading, error }: {
@@ -32,5 +42,6 @@ const useApiVendingMachinePatchDetailSwr = (uuid: string, body: IPatchVmDetail |
 export {
     useApiGetVendingMachineList,
     useApiVendingMachineDetail,
+    apiGetVendingMachinePatchDetail,
     useApiVendingMachinePatchDetailSwr,
 }
