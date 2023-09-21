@@ -46,7 +46,7 @@ export default function Page({ params }: { params: { uuid: string } }) {
     const [coins, setCoins] = useState<Coin[]>([]);
     const [banknotes, setBanknotes] = useState<Banknote[]>([]);
     const [sumMoney, setSumMoney] = useState<number>(0);
-    const [refundMoney, setRefundMoney] = useState<{
+    const [moneyBox, setMoneyBox] = useState<{
         coins: Coin[];
         banknotes: Banknote[];
     }>({ coins: [], banknotes: [] });
@@ -62,14 +62,34 @@ export default function Page({ params }: { params: { uuid: string } }) {
         setIsShowDebug(checked);
     };
     const onClickRefund = () => {
-        setRefundMoney({ coins, banknotes });
+        setMoneyBox({ coins, banknotes });
         setCoins([]);
         setBanknotes([]);
     };
     const onClickBuy = (item: IItemProduct) => {
         apiBuyItem(item.id, {
             user_amount: sumMoney,
-        }).then(() => {
+        }).then((res) => {
+            let displayChange: {
+                coins: Coin[];
+                banknotes: Banknote[];
+            } = {
+                coins: [],
+                banknotes: [],
+            };
+            Object.entries(res).forEach(([key, value]) => {
+                const money = Number(key.split('_')[1]);
+                if (key.includes('b')) {
+                    for (let index = 0; index < value; index++) {
+                        displayChange.banknotes.push(money);
+                    }
+                } else {
+                    for (let index = 0; index < value; index++) {
+                        displayChange.coins.push(money);
+                    }
+                }
+            });
+            setMoneyBox(displayChange);
             getVmData();
         });
     };
@@ -86,12 +106,12 @@ export default function Page({ params }: { params: { uuid: string } }) {
     };
 
     const renderMoneyBox = () => {
-        const coinsR = refundMoney.coins.map((e, i) => (
+        const coinsR = moneyBox.coins.map((e, i) => (
             <Tag key={`c-${i}`} color="blue">
                 {e}
             </Tag>
         ));
-        const banknotesR = refundMoney.banknotes.map((e, i) => (
+        const banknotesR = moneyBox.banknotes.map((e, i) => (
             <Tag key={`b-${i}`} color="volcano">
                 {e}
             </Tag>

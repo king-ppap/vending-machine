@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import { fetcher } from ".";
 import { TStockResponse } from '@/type/api/stock/stock';
-import { IBuyItemRequest } from '@/type/api/stock/buy-item';
+import { IBuyItemRequest, IBuyItemResponse } from '@/type/api/stock/buy-item';
 
 const useStock = (uuid: string) => {
     const url = `/stock/${uuid}/`;
@@ -13,7 +13,7 @@ const useStock = (uuid: string) => {
     return { data, isLoading, error }
 }
 
-const apiBuyItem = (itemId: number, body: IBuyItemRequest) => {
+const apiBuyItem = (itemId: number, body: IBuyItemRequest): Promise<IBuyItemResponse> => {
     return fetcher(`/stock/buy/${itemId}/`, {
         method: 'POST',
         headers: {
