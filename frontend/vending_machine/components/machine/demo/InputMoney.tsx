@@ -13,28 +13,13 @@ interface Props {
 }
 
 export default function InputMoney(props: Props) {
-    const handleRemoveCoin = (index: number) => {
-        const newCoins = props.moneys.filter((tag, i) => i !== index);
-        props.setMoneys(newCoins);
-    };
-
     const onClickAddCoin = (money: Coin | Banknote) => {
         props.setMoneys([...props.moneys, money]);
-        props.onAddMoney(money, props.moneyType)
+        props.onAddMoney(money, props.moneyType);
     };
 
     const forMap = (tag: Coin | Banknote, index: number) => {
-        const tagElem = (
-            <Tag
-                closable
-                onClose={(e) => {
-                    e.preventDefault();
-                    handleRemoveCoin(index);
-                }}
-            >
-                {tag}
-            </Tag>
-        );
+        const tagElem = <Tag>{tag}</Tag>;
         return <span key={index}>{tagElem}</span>;
     };
 

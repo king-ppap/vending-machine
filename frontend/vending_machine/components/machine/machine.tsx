@@ -20,38 +20,37 @@ interface Props {
 }
 
 export default function Machine(props: Props) {
-    if (!props.vmDetail.isLoading) {
-        const {
-            banknotes_100,
-            banknotes_1000,
-            banknotes_20,
-            banknotes_50,
-            banknotes_500,
-            coin_1,
-            coin_10,
-            coin_5,
-        } = props.vmDetail;
-        if (
-            banknotes_100 +
-                banknotes_1000 +
-                banknotes_20 +
-                banknotes_50 +
-                banknotes_500 +
-                coin_1 +
-                coin_10 +
-                coin_5 <=
-            0
-        ) {
-            return (
-                <div className="w-full flex justify-center items-center">
-                    <Result
-                        status="error"
-                        title="Out of service."
-                        subTitle="Insufficient funds"
-                    />
-                </div>
-            );
-        }
+    const {
+        banknote_100,
+        banknote_1000,
+        banknote_20,
+        banknote_50,
+        banknote_500,
+        coin_1,
+        coin_10,
+        coin_5,
+    } = props.vmDetail;
+    const isNoMoney =
+        banknote_100 +
+            banknote_1000 +
+            banknote_20 +
+            banknote_50 +
+            banknote_500 +
+            coin_1 +
+            coin_10 +
+            coin_5 <=
+        0;
+
+    if (isNoMoney) {
+        return (
+            <div className="w-full flex justify-center items-center">
+                <Result
+                    status="error"
+                    title="Out of service."
+                    subTitle="Insufficient funds"
+                />
+            </div>
+        );
     }
 
     const renderProducts = () =>
