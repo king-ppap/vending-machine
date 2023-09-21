@@ -6,9 +6,9 @@ export interface IGetVendingMachineDetailResponse {
     coin_1: number
     coin_5: number
     coin_10: number
-    banknotes_20: number
-    banknotes_50: number
-    banknotes_100: number
-    banknotes_500: number
-    banknotes_1000: number
+    banknote_20: number
+    banknote_50: number
+    banknote_100: number
+    banknote_500: number
+    banknote_1000: number
 }
