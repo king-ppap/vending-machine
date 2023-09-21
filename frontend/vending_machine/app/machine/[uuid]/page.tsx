@@ -58,13 +58,17 @@ export default function Page({ params }: { params: { uuid: string } }) {
         setSumMoney(sum);
     }, [coins, banknotes]);
 
+    const resetMoney = () => {
+        setCoins([]);
+        setBanknotes([]);
+    };
+
     const onChangeDebug = (checked: boolean) => {
         setIsShowDebug(checked);
     };
     const onClickRefund = () => {
         setMoneyBox({ coins, banknotes });
-        setCoins([]);
-        setBanknotes([]);
+        resetMoney();
     };
     const onClickBuy = (item: IItemProduct) => {
         apiBuyItem(item.id, {
@@ -90,10 +94,10 @@ export default function Page({ params }: { params: { uuid: string } }) {
                 }
             });
             setMoneyBox(displayChange);
+            resetMoney();
             getVmData();
         });
     };
-
     const onAddMoney = (money: Coin | Banknote, moneyType: MoneyType) => {
         const moneyKey = `${moneyType}_${money}`;
         if (!vmDetail) return;

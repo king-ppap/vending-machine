@@ -60,3 +60,44 @@ def findMinChange(ca: int, remaining: Dict[str, int]):
             return -1
 
     return result
+
+
+def findMinWithoutLimit(ca: int):
+    result = {
+        "coin_1": 0,
+        "coin_5": 0,
+        "coin_10": 0,
+        "banknote_20": 0,
+        "banknote_50": 0,
+        "banknote_100": 0,
+        "banknote_500": 0,
+        "banknote_1000": 0,
+    }
+
+    while (ca > 0):
+        if (ca >= 1000):
+            result["banknote_1000"] += 1
+            ca -= 1000
+        elif (ca >= 500):
+            result["banknote_500"] += 1
+            ca -= 500
+        elif (ca >= 100):
+            result["banknote_100"] += 1
+            ca -= 100
+        elif (ca >= 50):
+            result["banknote_50"] += 1
+            ca -= 50
+        elif (ca >= 20):
+            result["banknote_20"] += 1
+            ca -= 20
+        elif (ca >= 10):
+            result["coin_10"] += 1
+            ca -= 10
+        elif (ca >= 5):
+            result["coin_5"] += 1
+            ca -= 5
+        elif (ca >= 1):
+            result["coin_1"] += 1
+            ca -= 1
+
+    return result

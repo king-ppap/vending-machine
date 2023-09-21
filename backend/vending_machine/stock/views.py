@@ -1,5 +1,5 @@
 from django.db import transaction
-from .helper import findMinChange
+from .helper import findMinChange, findMinWithoutLimit
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from drf_spectacular.types import OpenApiTypes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -65,7 +65,8 @@ class ItemsInMachineGenericViewSet(GenericViewSet):
 
         result = findMinChange(change, item.machine.__dict__)
         if result == -1:
-            return Response({"message": 'Not enough money to change'}, status=505)
+            refund = findMinWithoutLimit(userAmount)
+            return Response({"message": 'Not enough money to change', "refund": refund}, status=505)
 
         item.count -= 1
         if item.count <= 0:
