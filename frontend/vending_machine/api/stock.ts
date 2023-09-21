@@ -13,8 +13,8 @@ const useStock = (uuid: string) => {
     return { data, isLoading, error }
 }
 
-const apiBuyItem = (uuid: string, itemId: number, body: IBuyItemRequest) => {
-    return fetcher(`/stock/${uuid}/buy/${itemId}/`, {
+const apiBuyItem = (itemId: number, body: IBuyItemRequest) => {
+    return fetcher(`/stock/buy/${itemId}/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

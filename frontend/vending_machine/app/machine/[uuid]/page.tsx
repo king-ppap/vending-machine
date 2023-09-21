@@ -1,6 +1,6 @@
 'use client';
 import { fetcher } from '@/api';
-import { useStock } from '@/api/stock';
+import { apiBuyItem, useStock } from '@/api/stock';
 import {
     apiGetVendingMachinePatchDetail,
     apiGetVendingMachineDetail,
@@ -19,10 +19,13 @@ export default function Page({ params }: { params: { uuid: string } }) {
     const [vmDetail, set่VmDetail] =
         useState<IGetVendingMachineDetailResponse | null>(null);
 
-    useEffect(() => {
+    const getVmData = () => {
         apiGetVendingMachineDetail(params.uuid).then((res) => {
             set่VmDetail(res);
         });
+    };
+    useEffect(() => {
+        getVmData();
     }, []);
 
     const stock = useStock(params.uuid);
@@ -64,10 +67,11 @@ export default function Page({ params }: { params: { uuid: string } }) {
         setBanknotes([]);
     };
     const onClickBuy = (item: IItemProduct) => {
-        item.product.price;
-        const change = sumMoney - item.product.price;
-        // const changeMoney = calChange(change);
-        // console.log('onClickBuy', changeMoney);
+        apiBuyItem(item.id, {
+            user_amount: sumMoney,
+        }).then(() => {
+            getVmData();
+        });
     };
 
     const onAddMoney = (money: Coin | Banknote, moneyType: MoneyType) => {
