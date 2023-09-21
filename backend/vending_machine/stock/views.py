@@ -46,21 +46,45 @@ class ItemsInMachineGenericViewSet(GenericViewSet):
         request=BuyItemRequestSerializer,
         responses=BuyItemResponseSerializer,
     )
-    @action(methods=['post'], detail=False, url_path='(?P<uuid>[^/.]+)/buy/(?P<item_id>[^/.]+)')
-    def buy_item(self, request, uuid, item_id):
+    @action(methods=['post'], detail=False, url_path='buy/(?P<item_id>[^/.]+)')
+    def buy_item(self, request, item_id):
         body = BuyItemRequestSerializer(data=request.data)
         body.is_valid(raise_exception=True)
         userAmount = body.data.get('user_amount', 0)
+        try:
+            item = ItemsInMachine.objects.get(pk=item_id)
+        except ItemsInMachine.DoesNotExist:
+            return Response({"message": 'Not found ItemsInMachine'}, status=status.HTTP_404_NOT_FOUND)
 
-        vm = VendingMachine.objects.get(uuid=uuid)
-        item = ItemsInMachine.objects.get(pk=item_id)
         price = item.product.price
         change = userAmount - price
         if change < 0:
             return Response({"message": 'Insufficient funds'}, status=status.HTTP_400_BAD_REQUEST)
 
-        result = findMinChange(change, vm.__dict__)
+        result = findMinChange(change, item.machine.__dict__)
         if result == -1:
             return Response({"message": 'Not enough money to change'}, status=505)
+
+        item.count -= 1
+        if item.count <= 0:
+            item.delete()
+        else:
+            item.save()
+
+        resultUpdateMoney = {
+            "uuid": item.machine.uuid,
+            "coin_1": item.machine.coin_1 - result["coin_1"],
+            "coin_5": item.machine.coin_5 - result["coin_5"],
+            "coin_10": item.machine.coin_10 - result["coin_10"],
+            "banknote_20": item.machine.banknote_20 - result["banknote_20"],
+            "banknote_50": item.machine.banknote_50 - result["banknote_50"],
+            "banknote_100": item.machine.banknote_100 - result["banknote_100"],
+            "banknote_500": item.machine.banknote_500 - result["banknote_500"],
+            "banknote_1000": item.machine.banknote_1000 - result["banknote_1000"],
+        }
+        logger.debug(resultUpdateMoney)
+        vm = VendingMachineSerializer(data=resultUpdateMoney, partial=True)
+        if vm.is_valid():
+            vm.save()
 
         return Response(BuyItemResponseSerializer(result).data)
