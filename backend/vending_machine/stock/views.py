@@ -1,3 +1,4 @@
+from django.db import transaction
 from .helper import findMinChange
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from drf_spectacular.types import OpenApiTypes
@@ -47,6 +48,7 @@ class ItemsInMachineGenericViewSet(GenericViewSet):
         responses=BuyItemResponseSerializer,
     )
     @action(methods=['post'], detail=False, url_path='buy/(?P<item_id>[^/.]+)')
+    @transaction.atomic
     def buy_item(self, request, item_id):
         body = BuyItemRequestSerializer(data=request.data)
         body.is_valid(raise_exception=True)
@@ -82,8 +84,8 @@ class ItemsInMachineGenericViewSet(GenericViewSet):
             "banknote_500": item.machine.banknote_500 - result["banknote_500"],
             "banknote_1000": item.machine.banknote_1000 - result["banknote_1000"],
         }
-        logger.debug(resultUpdateMoney)
-        vm = VendingMachineSerializer(item.machine, data=resultUpdateMoney, partial=True)
+        vm = VendingMachineSerializer(
+            item.machine, data=resultUpdateMoney, partial=True)
         if vm.is_valid():
             vm.save()
 
