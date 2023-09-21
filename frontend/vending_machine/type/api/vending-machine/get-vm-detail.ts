@@ -1,4 +1,5 @@
 export interface IGetVendingMachineDetailResponse {
+    [key: string]: number | string
     uuid: string
     name: string
     location: string

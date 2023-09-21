@@ -4,32 +4,33 @@ import { IGetVendingMachineListResponse } from '@/type/api/vending-machine/get-v
 import { IGetVendingMachineDetailResponse } from '@/type/api/vending-machine/get-vm-detail';
 import { IPatchVmDetail } from '@/type/api/vending-machine/patch-vm-detail';
 
-export const useApiGetVendingMachineList = () => {
+const useApiGetVendingMachineList = () => {
     const url = '/vending-machine/';
     const { data, isLoading, error }: {
         data: IGetVendingMachineListResponse;
         isLoading: boolean;
         error: any;
     } = useSWR(url, (url) => fetcher(url));
-    return { data, isLoading, error }
+    return { data, isLoading, error };
 }
 
-export const useApiVendingMachineDetail = (uuid: string) => {
+const useApiVendingMachineDetail = (uuid: string) => {
     const url = `/vending-machine/${uuid}/`;
-    const { data, isLoading, error }: {
-        data: IGetVendingMachineDetailResponse;
-        isLoading: boolean;
-        error: any;
-    } = useSWR(url, (url) => fetcher(url));
-    return { data, isLoading, error }
+    return fetcher(url);
 }
 
-export const useApiVendingMachinePatchDetail = (uuid: string, body: IPatchVmDetail) => {
+const useApiVendingMachinePatchDetailSwr = (uuid: string, body: IPatchVmDetail | null) => {
     const url = `/vending-machine/${uuid}/`;
     const { data, isLoading, error }: {
         data: IGetVendingMachineDetailResponse;
         isLoading: boolean;
         error: any;
     } = useSWR(url, (url) => fetcher(url, { method: 'patch', body: JSON.stringify(body) }));
-    return { data, isLoading, error }
+    return { data, isLoading, error };
+}
+
+export {
+    useApiGetVendingMachineList,
+    useApiVendingMachineDetail,
+    useApiVendingMachinePatchDetailSwr,
 }

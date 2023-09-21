@@ -1,41 +1,39 @@
 'use client';
+import { fetcher } from '@/api';
 import { useStock } from '@/api/stock';
 import {
     useApiVendingMachineDetail,
-    useApiVendingMachinePatchDetail,
 } from '@/api/vending-machine';
+import useSWR from 'swr';
 import Machine from '@/components/machine/Machine';
 import InputMoney from '@/components/machine/demo/InputMoney';
 import { IItemProduct, MoneyType } from '@/type/api/stock/stock';
 import { Banknote, Coin } from '@/type/api/vending-machine/get-vm-list';
 import { Alert, Button, Card, Switch, Tag, Input } from 'antd';
 import { useEffect, useState } from 'react';
+import { IGetVendingMachineDetailResponse } from '@/type/api/vending-machine/get-vm-detail';
 const { TextArea } = Input;
 
 export default function Page({ params }: { params: { uuid: string } }) {
-    const vmDetail = useApiVendingMachineDetail(params.uuid);
-    const stock = useStock(params.uuid);
+    const [vmDetail, set่VmDetail] =
+        useState<IGetVendingMachineDetailResponse | null>(null);
 
-    if (vmDetail.error || stock.error)
+    useEffect(() => {
+        useApiVendingMachineDetail(params.uuid).then((res) => {
+            set่VmDetail(res);
+        });
+    }, []);
+
+    const stock = useStock(params.uuid);
+    if (stock.error)
         return (
             <div className="w-full bg-slate-700 flex justify-center items-center">
-                {vmDetail.error ? (
-                    <Alert
-                        message="Error: Can not get vending machine detail"
-                        type="error"
-                        showIcon
-                    />
-                ) : (
-                    <></>
-                )}
-                {stock.error ? (
+                {stock.error && (
                     <Alert
                         message="Error: Can not get stock"
                         type="error"
                         showIcon
                     />
-                ) : (
-                    <></>
                 )}
             </div>
         );
@@ -80,7 +78,7 @@ export default function Page({ params }: { params: { uuid: string } }) {
             coin_1,
             coin_10,
             coin_5,
-        } = vmDetail.data;
+        } = vmDetail;
 
         while (changeAmount > 0) {
             if (changeAmount >= 1000) {
@@ -115,16 +113,24 @@ export default function Page({ params }: { params: { uuid: string } }) {
             banknotes,
         };
     };
+
     const onAddMoney = (money: Coin | Banknote, moneyType: MoneyType) => {
         const moneyKey = `${moneyType}_${money}`;
-        console.log('onAddMoney', {
-            [moneyKey]: vmDetail.data[moneyKey] + 1,
-        });
-
-        useApiVendingMachinePatchDetail(params.uuid, {
-            [moneyKey]: vmDetail.data[moneyKey] + 1,
+        fetcher(`/vending-machine/${params.uuid}/`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                [moneyKey]: vmDetail[moneyKey] + 1,
+            }),
+        }).then((res) => {
+            set่VmDetail(res);
         });
     };
+
+    // console.log(data);
+    // console.log(error);
 
     const forMapTagRefundMoney = (tag: Coin | Banknote, index: number) => {
         const tagElem = <Tag color="blue">{tag}</Tag>;
@@ -149,16 +155,18 @@ export default function Page({ params }: { params: { uuid: string } }) {
                 )}
             </div>
             <div className="w-full h-full flex justify-between">
-                <Machine
-                    vmDetail={vmDetail}
-                    stock={stock}
-                    uuid={params.uuid}
-                    coins={coins}
-                    banknotes={banknotes}
-                    sumMoney={sumMoney}
-                    onClickBuy={onClickBuy}
-                />
-                {isShowDebug ? (
+                {vmDetail && (
+                    <Machine
+                        vmDetail={vmDetail}
+                        stock={stock}
+                        uuid={params.uuid}
+                        coins={coins}
+                        banknotes={banknotes}
+                        sumMoney={sumMoney}
+                        onClickBuy={onClickBuy}
+                    />
+                )}
+                {isShowDebug && (
                     <div className="max-w-[400px] min-w-[400px] bg-slate-300 p-2">
                         <Card>
                             <p>Money: {sumMoney}</p>
@@ -195,12 +203,10 @@ export default function Page({ params }: { params: { uuid: string } }) {
                         <Card>
                             <TextArea
                                 rows={13}
-                                value={JSON.stringify(vmDetail.data, null, ' ')}
+                                value={JSON.stringify(vmDetail, null, ' ')}
                             ></TextArea>
                         </Card>
                     </div>
-                ) : (
-                    <></>
                 )}
             </div>
         </div>

@@ -10,11 +10,7 @@ interface Props {
     coins: Coin[];
     banknotes: Banknote[];
     sumMoney: number;
-    vmDetail: {
-        data: IGetVendingMachineDetailResponse;
-        isLoading: boolean;
-        error: any;
-    };
+    vmDetail: IGetVendingMachineDetailResponse;
     stock: {
         data: TStockResponse;
         isLoading: boolean;
@@ -34,7 +30,7 @@ export default function Machine(props: Props) {
             coin_1,
             coin_10,
             coin_5,
-        } = props.vmDetail.data;
+        } = props.vmDetail;
         if (
             banknotes_100 +
                 banknotes_1000 +
@@ -74,7 +70,7 @@ export default function Machine(props: Props) {
         <div className="w-full bg-[#0D2491]">
             <div className="flex flex-col items-center justify-center p-4">
                 <h1 className="text-xl text-slate-50">
-                    {props.vmDetail.data.name || 'Simple Vending Machine'}
+                    {props.vmDetail.name || 'Simple Vending Machine'}
                 </h1>
             </div>
             <div className="max-h-[calc(100vh-60px)] overflow-y-auto grid gap-4 p-4 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-8 ">
