@@ -1,5 +1,5 @@
 from django.db import transaction
-from .helper import findMinChange, findMinWithoutLimit
+from .helper import find_min_change, find_min_without_limit, adjust_money
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from drf_spectacular.types import OpenApiTypes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -63,9 +63,16 @@ class ItemsInMachineGenericViewSet(GenericViewSet):
         if change < 0:
             return Response({"message": 'Insufficient funds'}, status=status.HTTP_400_BAD_REQUEST)
 
-        result = findMinChange(change, item.machine.__dict__)
+        result = find_min_change(change, item.machine.__dict__)
         if result == -1:
-            refund = findMinWithoutLimit(userAmount)
+            refund = find_min_without_limit(userAmount)
+
+            resultUpdateMoney = adjust_money(item.machine, refund)
+            vm = VendingMachineSerializer(
+                item.machine, data=resultUpdateMoney, partial=True)
+            if vm.is_valid():
+                vm.save()
+
             return Response({"message": 'Not enough money to change', "refund": refund}, status=505)
 
         item.count -= 1
@@ -74,17 +81,7 @@ class ItemsInMachineGenericViewSet(GenericViewSet):
         else:
             item.save()
 
-        resultUpdateMoney = {
-            "uuid": item.machine.uuid,
-            "coin_1": item.machine.coin_1 - result["coin_1"],
-            "coin_5": item.machine.coin_5 - result["coin_5"],
-            "coin_10": item.machine.coin_10 - result["coin_10"],
-            "banknote_20": item.machine.banknote_20 - result["banknote_20"],
-            "banknote_50": item.machine.banknote_50 - result["banknote_50"],
-            "banknote_100": item.machine.banknote_100 - result["banknote_100"],
-            "banknote_500": item.machine.banknote_500 - result["banknote_500"],
-            "banknote_1000": item.machine.banknote_1000 - result["banknote_1000"],
-        }
+        resultUpdateMoney = adjust_money(item.machine, result)
         vm = VendingMachineSerializer(
             item.machine, data=resultUpdateMoney, partial=True)
         if vm.is_valid():

@@ -1,7 +1,7 @@
 from typing import Dict
 
 
-def findMinChange(ca: int, remaining: Dict[str, int]):
+def find_min_change(ca: int, remaining: Dict[str, int]):
     result = {
         "coin_1": 0,
         "coin_5": 0,
@@ -62,7 +62,7 @@ def findMinChange(ca: int, remaining: Dict[str, int]):
     return result
 
 
-def findMinWithoutLimit(ca: int):
+def find_min_without_limit(ca: int):
     result = {
         "coin_1": 0,
         "coin_5": 0,
@@ -101,3 +101,17 @@ def findMinWithoutLimit(ca: int):
             ca -= 1
 
     return result
+
+
+def adjust_money(machine, refund):
+    return {
+        "uuid": machine.uuid,
+        "coin_1": machine.coin_1 - refund["coin_1"],
+        "coin_5": machine.coin_5 - refund["coin_5"],
+        "coin_10": machine.coin_10 - refund["coin_10"],
+        "banknote_20": machine.banknote_20 - refund["banknote_20"],
+        "banknote_50": machine.banknote_50 - refund["banknote_50"],
+        "banknote_100": machine.banknote_100 - refund["banknote_100"],
+        "banknote_500": machine.banknote_500 - refund["banknote_500"],
+        "banknote_1000": machine.banknote_1000 - refund["banknote_1000"],
+    }
