@@ -1,5 +1,5 @@
 from django.db import transaction
-from .helper import find_min_change, find_min_without_limit, adjust_money
+from .helper import find_min_change, adjust_money
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from drf_spectacular.types import OpenApiTypes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -34,6 +34,7 @@ class ItemsInMachineViewSet(ModelViewSet):
     serializer_class = ItemsInMachineSerializer
     ordering_fields = '__all__'
 
+import copy
 
 class ItemsInMachineGenericViewSet(GenericViewSet):
     serializer_class = ItemsInMachineSerializer(many=True)
@@ -64,15 +65,16 @@ class ItemsInMachineGenericViewSet(GenericViewSet):
         if change < 0:
             return Response({"message": 'Insufficient funds'}, status=status.HTTP_400_BAD_REQUEST)
 
-        result = find_min_change(change, item.machine.__dict__)
+        result = find_min_change(change, copy.copy(item.machine.__dict__))
+
         if result == -1:
-            refund = find_min_change(userAmount, item.machine.__dict__)
+            refund = find_min_change(userAmount, copy.copy(item.machine.__dict__))
 
             resultUpdateMoney = adjust_money(item.machine, refund)
-            vm = VendingMachineSerializer(
+            vmR = VendingMachineSerializer(
                 item.machine, data=resultUpdateMoney, partial=True)
-            if vm.is_valid():
-                vm.save()
+            if vmR.is_valid():
+                vmR.save()
 
             return Response({"message": 'Not enough money to change', "refund": refund}, status=505)
 
