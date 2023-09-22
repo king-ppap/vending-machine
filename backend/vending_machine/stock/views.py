@@ -1,17 +1,15 @@
 from django.forms.models import model_to_dict
 from django.db import transaction
 from .helper import find_min_change, adjust_money
-from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
-from drf_spectacular.types import OpenApiTypes
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet, ModelViewSet
+from drf_spectacular.utils import extend_schema
+from rest_framework.permissions import AllowAny
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from .models import Product, Category, ItemsInMachine
 from .serializers import ProductSerializer, CategorySerializer, ItemsInMachineSerializer, BuyItemRequestSerializer, BuyItemResponseSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 from machine.serializers import VendingMachineSerializer
-from machine.models import VendingMachine
 
 import logging
 logger = logging.getLogger(__name__)
