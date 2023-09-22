@@ -4,6 +4,7 @@ import { apiBuyItem, useStock } from '@/api/stock';
 import {
     apiGetVendingMachinePatchDetail,
     apiGetVendingMachineDetail,
+    apiRefundVendingMachine,
 } from '@/api/vending-machine';
 import Machine from '@/components/machine/Machine';
 import InputMoney from '@/components/machine/demo/InputMoney';
@@ -54,6 +55,7 @@ export default function Page({ params }: { params: { uuid: string } }) {
         title: string;
         message: string;
     } | null>(null);
+    const [isLoadingRefund, setLoadingRefund] = useState(false);
 
     useEffect(() => {
         let sum = 0;
@@ -72,10 +74,6 @@ export default function Page({ params }: { params: { uuid: string } }) {
 
     const onChangeDebug = (checked: boolean) => {
         setIsShowDebug(checked);
-    };
-    const onClickRefund = () => {
-        setMoneyBox({ coins, banknotes });
-        resetMoney();
     };
 
     const closeModal = () => setModalData(null);
@@ -151,6 +149,25 @@ export default function Page({ params }: { params: { uuid: string } }) {
             set่VmDetail(res);
         });
     };
+    const onClickRefund = () => {
+        setLoadingRefund(true);
+        apiRefundVendingMachine(params.uuid, sumMoney)
+            .then((res) => {
+                const displayChange = prepareDisplayChange(res);
+                setMoneyBox(displayChange);
+                resetMoney();
+            })
+            .catch((error) => {
+                setModalData({
+                    title: 'Opos!, Something wrong with rufunding please try again',
+                    message: error.message,
+                });
+            })
+            .finally(() => {
+                setLoadingRefund(false);
+                getVmData();
+            });
+    };
 
     const renderMoneyBox = () => {
         const coinsR = moneyBox.coins.map((e, i) => (
@@ -202,7 +219,8 @@ export default function Page({ params }: { params: { uuid: string } }) {
                             <Button
                                 className="my-2"
                                 onClick={onClickRefund}
-                                disabled
+                                disabled={sumMoney <= 0}
+                                loading={isLoadingRefund}
                             >
                                 Refund
                             </Button>

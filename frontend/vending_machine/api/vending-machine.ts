@@ -39,9 +39,20 @@ const useApiVendingMachinePatchDetailSwr = (uuid: string, body: IPatchVmDetail |
     return { data, isLoading, error };
 }
 
+const apiRefundVendingMachine = (uuid: string, amount: number) => {
+    const url = `/vending-machine-custom/${uuid}/refund/${amount}/`;
+    return fetcher(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+}
+
 export {
     useApiGetVendingMachineList,
     apiGetVendingMachineDetail,
     apiGetVendingMachinePatchDetail,
     useApiVendingMachinePatchDetailSwr,
+    apiRefundVendingMachine,
 }
