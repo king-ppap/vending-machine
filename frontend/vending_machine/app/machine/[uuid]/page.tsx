@@ -21,7 +21,7 @@ import {
     ResultProps,
     Result,
 } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { IGetVendingMachineDetailResponse } from '@/type/api/vending-machine/get-vm-detail';
 import { IBuyItemResponse } from '@/type/api/stock/buy-item';
 const { TextArea } = Input;
@@ -79,6 +79,7 @@ export default function Page({ params }: { params: { uuid: string } }) {
         message: string;
     } | null>(null);
     const [isLoadingRefund, setLoadingRefund] = useState(false);
+    const intervalModalRef = useRef<any>();
 
     useEffect(() => {
         let sum = 0;
@@ -99,7 +100,10 @@ export default function Page({ params }: { params: { uuid: string } }) {
         setIsShowDebug(checked);
     };
 
-    const closeModal = () => setModalData(null);
+    const closeModal = () => {
+        setModalData(null);
+        clearInterval(intervalModalRef.current);
+    };
     const prepareDisplayChange = (res: IBuyItemResponse) => {
         let displayChange: {
             coins: Coin[];
@@ -137,16 +141,17 @@ export default function Page({ params }: { params: { uuid: string } }) {
                     title: `Yeah! (${timeClose})`,
                     message: `Here this is your ${item.product.name}`,
                 });
-                const interval = setInterval(() => {
+                const intervalTemp: any = setInterval(() => {
                     setModalData({
                         title: `Yeah! (${(timeClose -= 1)})`,
                         message: `Here this is your ${item.product.name}`,
                     });
                     if (timeClose <= 0) {
                         closeModal();
-                        clearInterval(interval);
+                        clearInterval(intervalModalRef.current);
                     }
                 }, 1000);
+                intervalModalRef.current = intervalTemp;
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -224,18 +229,20 @@ export default function Page({ params }: { params: { uuid: string } }) {
                 )}
             </div>
             <div className="w-full h-full flex justify-between">
-                {isPopoverMachine && <div className="w-full flex justify-center items-center">
-                    <Result
-                        status={isPopoverMachine.status}
-                        title={isPopoverMachine.title}
-                        subTitle={isPopoverMachine.subTitle}
-                        children={isPopoverMachine.children}
-                        className={isPopoverMachine.className}
-                        extra={isPopoverMachine.extra}
-                        icon={isPopoverMachine.icon}
-                    />
-                </div>}
-                {(vmDetail && !isPopoverMachine) && (
+                {isPopoverMachine && (
+                    <div className="w-full flex justify-center items-center">
+                        <Result
+                            status={isPopoverMachine.status}
+                            title={isPopoverMachine.title}
+                            subTitle={isPopoverMachine.subTitle}
+                            children={isPopoverMachine.children}
+                            className={isPopoverMachine.className}
+                            extra={isPopoverMachine.extra}
+                            icon={isPopoverMachine.icon}
+                        />
+                    </div>
+                )}
+                {vmDetail && !isPopoverMachine && (
                     <Machine
                         vmDetail={vmDetail}
                         stock={stock}
