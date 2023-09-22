@@ -13,7 +13,7 @@
 
 2. `useSWR` only need to auto sync data
 
-## TODO
+## Note (idea) 🤔
 
 1. Return money to customer when system down
    - Store amount to localStorage
