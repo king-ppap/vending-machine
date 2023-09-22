@@ -10,7 +10,17 @@ import Machine from '@/components/machine/Machine';
 import InputMoney from '@/components/machine/demo/InputMoney';
 import { IItemProduct, MoneyType } from '@/type/api/stock/stock';
 import { Banknote, Coin } from '@/type/api/vending-machine/get-vm-list';
-import { Alert, Button, Card, Switch, Tag, Input, Modal } from 'antd';
+import {
+    Alert,
+    Button,
+    Card,
+    Switch,
+    Tag,
+    Input,
+    Modal,
+    ResultProps,
+    Result,
+} from 'antd';
 import { useEffect, useState } from 'react';
 import { IGetVendingMachineDetailResponse } from '@/type/api/vending-machine/get-vm-detail';
 import { IBuyItemResponse } from '@/type/api/stock/buy-item';
@@ -20,17 +30,30 @@ export default function Page({ params }: { params: { uuid: string } }) {
     const [vmDetail, set่VmDetail] =
         useState<IGetVendingMachineDetailResponse | null>(null);
 
-    const getVmData = () => {
-        apiGetVendingMachineDetail(params.uuid).then((res) => {
-            set่VmDetail(res);
-        });
+    const [isPopoverMachine, setPopoverMachine] = useState<ResultProps | null>(
+        null
+    );
+
+    const getVmData = async () => {
+        try {
+            await apiGetVendingMachineDetail(params.uuid).then((res) => {
+                set่VmDetail(res);
+            });
+        } catch (error: any) {
+            console.error('Error: getVmData', error);
+            setPopoverMachine({
+                status: 'error',
+                title: 'Cannot get Vending Machine data.',
+                subTitle: error.message || error.detail,
+            });
+        }
     };
     useEffect(() => {
         getVmData();
     }, []);
 
     const stock = useStock(params.uuid);
-    if (stock.error)
+    if (stock.error && !isPopoverMachine)
         return (
             <div className="w-full bg-slate-700 flex justify-center items-center">
                 {stock.error && (
@@ -201,7 +224,18 @@ export default function Page({ params }: { params: { uuid: string } }) {
                 )}
             </div>
             <div className="w-full h-full flex justify-between">
-                {vmDetail && (
+                {isPopoverMachine && <div className="w-full flex justify-center items-center">
+                    <Result
+                        status={isPopoverMachine.status}
+                        title={isPopoverMachine.title}
+                        subTitle={isPopoverMachine.subTitle}
+                        children={isPopoverMachine.children}
+                        className={isPopoverMachine.className}
+                        extra={isPopoverMachine.extra}
+                        icon={isPopoverMachine.icon}
+                    />
+                </div>}
+                {(vmDetail && !isPopoverMachine) && (
                     <Machine
                         vmDetail={vmDetail}
                         stock={stock}

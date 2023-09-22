@@ -4,6 +4,7 @@ import AppLoadingFullScreen from '../app/AppLoadingFullScreen';
 import { Result } from 'antd';
 import { IGetVendingMachineDetailResponse } from '@/type/api/vending-machine/get-vm-detail';
 import { TStockResponse } from '@/type/api/stock/stock';
+import { ResultProps } from 'antd/es/result';
 
 interface Props {
     uuid: string;
@@ -17,6 +18,7 @@ interface Props {
         error: any;
     };
     onClickBuy: Function;
+    isPopover?: ResultProps | null;
 }
 
 export default function Machine(props: Props) {
