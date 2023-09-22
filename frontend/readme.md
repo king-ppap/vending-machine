@@ -12,6 +12,7 @@
     ```
 
 2. `useSWR` only need to auto sync data
+3. Store `setInterval` in [useRef](https://react.dev/reference/react/useRef#useref)
 
 ## Note (idea) 🤔
 
