@@ -34,9 +34,3 @@ Use `Next`
 
 1. [Swagger](http://localhost:8989/api/schema/swagger/) `http://localhost:8989/api/schema/swagger/`
 2. [Redoc](http://localhost:8989/api/schema/redoc/) `http://localhost:8989/api/schema/redoc/`
-
-## Note (idea) 🤔
-
-1. Max slot for each machine
-2. Store slot number in `ItemsInMachine` model
-3. Refund money
