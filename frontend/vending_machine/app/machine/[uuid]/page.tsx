@@ -78,6 +78,7 @@ export default function Page({ params }: { params: { uuid: string } }) {
         resetMoney();
     };
 
+    const closeModal = () => setModalData(null);
     const prepareDisplayChange = (res: IBuyItemResponse) => {
         let displayChange: {
             coins: Coin[];
@@ -110,10 +111,21 @@ export default function Page({ params }: { params: { uuid: string } }) {
                 const displayChange = prepareDisplayChange(res);
                 setMoneyBox(displayChange);
                 resetMoney();
+                let timeClose = 5;
                 setModalData({
-                    title: "Yeah!",
-                    message: `Here this is your ${item.product.name}`
-                })
+                    title: `Yeah! (${timeClose})`,
+                    message: `Here this is your ${item.product.name}`,
+                });
+                const interval = setInterval(() => {
+                    setModalData({
+                        title: `Yeah! (${(timeClose -= 1)})`,
+                        message: `Here this is your ${item.product.name}`,
+                    });
+                    if (timeClose <= 0) {
+                        closeModal();
+                        clearInterval(interval);
+                    }
+                }, 1000);
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -187,7 +199,11 @@ export default function Page({ params }: { params: { uuid: string } }) {
                     <div className="max-w-[400px] min-w-[400px] bg-slate-300 p-2">
                         <Card>
                             <p>Money: {sumMoney}</p>
-                            <Button className="my-2" onClick={onClickRefund} disabled>
+                            <Button
+                                className="my-2"
+                                onClick={onClickRefund}
+                                disabled
+                            >
                                 Refund
                             </Button>
                             <p>Money box: {renderMoneyBox()}</p>
@@ -229,7 +245,13 @@ export default function Page({ params }: { params: { uuid: string } }) {
             <Modal
                 title={modalData?.title}
                 open={!!modalData}
-                onOk={() => setModalData(null)}
+                onOk={closeModal}
+                onCancel={closeModal}
+                footer={[
+                    <Button key="ok" type="primary" onClick={closeModal}>
+                        Ok
+                    </Button>,
+                ]}
             >
                 <p>{modalData?.message}</p>
             </Modal>
