@@ -55,6 +55,18 @@ export default function Machine(props: Props) {
         );
     }
 
+    if (props.stock.data.length <= 0) {
+        return (
+            <div className="w-full flex justify-center items-center">
+                <Result
+                    status="warning"
+                    title="Out of service."
+                    subTitle="No item in this machine."
+                />
+            </div>
+        );
+    }
+
     const renderProducts = () =>
         props.stock.data.map((e, i) => (
             <ItemProduct
